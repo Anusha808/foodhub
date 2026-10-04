@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Shopping Cart | FoodHub</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet"
+          th:href="@{/css/cart.css}">
+
+</head>
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a href="/" class="logo">
+
+            <span class="logo-icon">
+                <i class="fa-solid fa-utensils"></i>
+            </span>
+
+            FoodHub
+
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/foods">
+                Food Menu
+            </a>
+
+            <a href="/#categories">
+                Categories
+            </a>
+
+            <a href="/#about">
+                About
+            </a>
+
+        </nav>
+
+
+        <div class="nav-actions">
+
+            <a href="/cart"
+               class="cart-link active-cart"
+               title="Shopping Cart">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+                <span class="cart-count"
+                      th:text="${cartCount}">
+                    0
+                </span>
+
+            </a>
+
+            <a href="/login"
+               class="login-btn">
+
+                Login
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- ================= PAGE HEADER ================= -->
+
+<section class="page-header">
+
+    <div class="page-header-content">
+
+        <span class="page-label">
+
+            <i class="fa-solid fa-cart-shopping"></i>
+
+            YOUR CART
+
+        </span>
+
+
+        <h1>
+
+            Your Shopping
+            <span>Cart</span>
+
+        </h1>
+
+
+        <p>
+
+            Review your selected food items before
+            placing your order.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CART SECTION ================= -->
+
+<main class="cart-section">
+
+    <div class="cart-container">
+
+
+        <!-- ================= EMPTY CART ================= -->
+
+        <div class="empty-cart"
+             th:if="${cartCount == 0}">
+
+            <div class="empty-cart-icon">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+            </div>
+
+
+            <h2>
+                Your cart is empty
+            </h2>
+
+
+            <p>
+
+                You haven't added any food items
+                to your cart yet.
+
+            </p>
+
+
+            <a href="/foods"
+               class="browse-btn">
+
+                <i class="fa-solid fa-utensils"></i>
+
+                Browse Food
+
+            </a>
+
+        </div>
+
+
+        <!-- ================= CART CONTENT ================= -->
+
+        <div class="cart-content"
+             th:if="${cartCount > 0}">
+
+            <div class="cart-items">
+
+                <!--
+
+                    Cart items will be displayed here
+                    when the CartItem system is implemented.
+
+                -->
+
+            </div>
+
+
+            <div class="cart-summary">
+
+                <h3>
+                    Order Summary
+                </h3>
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Items
+                    </span>
+
+                    <span th:text="${cartCount}">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong>
+
+                        ₹<span th:text="${cartTotal}">
+                            0.00
+                        </span>
+
+                    </strong>
+
+                </div>
+
+
+                <button class="checkout-btn">
+
+                    Proceed to Checkout
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <a href="/" class="logo">
+
+                <span class="logo-icon">
+
+                    <i class="fa-solid fa-utensils"></i>
+
+                </span>
+
+                FoodHub
+
+            </a>
+
+
+            <p>
+
+                Delicious food delivered straight
+                to your doorstep.
+
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <h4>
+                Quick Links
+            </h4>
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/foods">
+                Food Menu
+            </a>
+
+            <a href="/#about">
+                About Us
+            </a>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <h4>
+                Account
+            </h4>
+
+            <a href="/login">
+                Login
+            </a>
+
+            <a href="/register">
+                Register
+            </a>
+
+            <a href="/cart">
+                Cart
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <p>
+
+            © 2026 FoodHub.
+            All rights reserved.
+
+        </p>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>

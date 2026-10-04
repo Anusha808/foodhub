@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Food Menu | FoodHub</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Food CSS -->
+    <link rel="stylesheet"
+          th:href="@{/css/foods.css}">
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <!-- Logo -->
+
+        <a href="/" class="logo">
+            <span class="logo-icon">🍴</span>
+            <span>Food<span class="logo-highlight">Hub</span></span>
+        </a>
+
+
+        <!-- Navigation -->
+
+        <div class="nav-links">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/foods" class="active">
+                Food Menu
+            </a>
+
+            <a href="#categories">
+                Categories
+            </a>
+
+            <a href="#about">
+                About
+            </a>
+
+        </div>
+
+
+        <!-- Actions -->
+
+        <div class="nav-actions">
+
+            <a href="/login"
+               class="login-btn">
+                Login
+            </a>
+
+            <a href="/register"
+               class="register-btn">
+                Register
+            </a>
+
+            <a href="/cart"
+               class="cart-link"
+               title="Shopping Cart">
+
+                🛒
+
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= PAGE HEADER ================= -->
+
+<section class="page-header">
+
+    <div class="page-header-content">
+
+        <span class="page-label">
+            🍽️ Fresh & Delicious
+        </span>
+
+        <h1>
+            Explore Our Food Menu
+        </h1>
+
+        <p>
+            Discover delicious meals prepared with fresh
+            ingredients and delivered to your doorstep.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOD SECTION ================= -->
+
+<section class="food-section">
+
+    <div class="section-container">
+
+        <!-- Section Heading -->
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">
+                    OUR MENU
+                </span>
+
+                <h2>
+                    Delicious Choices
+                </h2>
+
+            </div>
+
+            <p>
+                Choose your favorite food and add it
+                to your cart.
+            </p>
+
+        </div>
+
+
+        <!-- ================= FOOD GRID ================= -->
+
+        <div class="food-grid"
+             th:if="${foods != null and !foods.isEmpty()}">
+
+            <!-- Food Card -->
+
+            <div class="food-card"
+                 th:each="food : ${foods}">
+
+
+                <!-- Food Image -->
+
+                <div class="food-image">
+
+                    <img th:if="${food.image != null and !food.image.isEmpty()}"
+                         th:src="@{'/images/foods/' + ${food.image}}"
+                         th:alt="${food.name}">
+
+                    <div th:unless="${food.image != null and !food.image.isEmpty()}"
+                         class="image-placeholder">
+
+                        🍽️
+
+                    </div>
+
+                </div>
+
+
+                <!-- Food Content -->
+
+                <div class="food-content">
+
+
+                    <!-- Category -->
+
+                    <span class="food-category"
+                          th:text="${food.category}">
+                        Category
+                    </span>
+
+
+                    <!-- Food Name -->
+
+                    <h3 th:text="${food.name}">
+                        Food Name
+                    </h3>
+
+
+                    <!-- Description -->
+
+                    <p class="food-description"
+                       th:text="${food.description}">
+                        Food description
+                    </p>
+
+
+                    <!-- Price and Stock -->
+
+                    <div class="food-info">
+
+                        <span class="food-price">
+
+                            ₹<span th:text="${food.price}">
+                                0
+                            </span>
+
+                        </span>
+
+
+                        <!-- In Stock -->
+
+                        <span class="stock-status in-stock"
+                              th:if="${food.stock > 0}">
+
+                            ● In Stock
+
+                        </span>
+
+
+                        <!-- Out of Stock -->
+
+                        <span class="stock-status out-stock"
+                              th:if="${food.stock <= 0}">
+
+                            ● Out of Stock
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- ================= ADD TO CART ================= -->
+
+                    <form th:if="${food.stock > 0}"
+                          th:action="@{/cart/add/{foodId}(foodId=${food.id})}"
+                          method="post"
+                          class="add-cart-form">
+
+                        <button type="submit"
+                                class="add-cart-btn">
+
+                            🛒 Add to Cart
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- ================= OUT OF STOCK ================= -->
+
+                    <button th:if="${food.stock <= 0}"
+                            type="button"
+                            class="add-cart-btn disabled"
+                            disabled>
+
+                        Out of Stock
+
+                    </button>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= NO FOOD ================= -->
+
+        <div class="no-food"
+             th:if="${foods == null or foods.isEmpty()}">
+
+            <div class="no-food-icon">
+                🍽️
+            </div>
+
+            <h3>
+                No Food Available
+            </h3>
+
+            <p>
+                We are currently updating our menu.
+                Please check again later.
+            </p>
+
+            <a href="/" class="back-home-btn">
+                Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CATEGORIES ================= -->
+
+<section class="categories-section"
+         id="categories">
+
+    <div class="section-container">
+
+        <div class="section-heading centered">
+
+            <span class="section-label">
+                CATEGORIES
+            </span>
+
+            <h2>
+                Something For Everyone
+            </h2>
+
+            <p>
+                Explore different types of delicious food.
+            </p>
+
+        </div>
+
+
+        <div class="category-grid">
+
+            <div class="category-item">
+                <span>🍕</span>
+                <h3>Pizza</h3>
+            </div>
+
+            <div class="category-item">
+                <span>🍔</span>
+                <h3>Burgers</h3>
+            </div>
+
+            <div class="category-item">
+                <span>🍛</span>
+                <h3>Biryani</h3>
+            </div>
+
+            <div class="category-item">
+                <span>🥞</span>
+                <h3>South Indian</h3>
+            </div>
+
+            <div class="category-item">
+                <span>🥗</span>
+                <h3>Starters</h3>
+            </div>
+
+            <div class="category-item">
+                <span>🍰</span>
+                <h3>Desserts</h3>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ABOUT ================= -->
+
+<section class="about-section"
+         id="about">
+
+    <div class="section-container">
+
+        <div class="about-content">
+
+            <span class="section-label">
+                ABOUT FOODHUB
+            </span>
+
+            <h2>
+                Good Food. Great Experience.
+            </h2>
+
+            <p>
+                FoodHub is an online food ordering platform
+                designed to make ordering your favorite meals
+                simple, fast and convenient.
+            </p>
+
+            <p>
+                Browse our menu, select your favorite dishes,
+                add them to your cart and place your order
+                from the comfort of your home.
+            </p>
+
+            <a href="/foods"
+               class="browse-btn">
+                Explore Menu
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div class="footer-brand">
+
+            <a href="/" class="logo">
+
+                <span class="logo-icon">
+                    🍴
+                </span>
+
+                <span>
+                    Food<span class="logo-highlight">
+                        Hub
+                    </span>
+                </span>
+
+            </a>
+
+            <p>
+                Delicious food delivered
+                to your doorstep.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <h4>
+                Quick Links
+            </h4>
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/foods">
+                Food Menu
+            </a>
+
+            <a href="/cart">
+                Cart
+            </a>
+
+            <a href="/login">
+                Login
+            </a>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <h4>
+                Categories
+            </h4>
+
+            <a href="/foods">
+                Pizza
+            </a>
+
+            <a href="/foods">
+                Burgers
+            </a>
+
+            <a href="/foods">
+                Biryani
+            </a>
+
+            <a href="/foods">
+                Desserts
+            </a>
+
+        </div>
+
+
+        <div class="footer-contact">
+
+            <h4>
+                Contact
+            </h4>
+
+            <p>
+                📧 support@foodhub.com
+            </p>
+
+            <p>
+                📞 +91 98765 43210
+            </p>
+
+            <p>
+                📍 India
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 FoodHub. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>

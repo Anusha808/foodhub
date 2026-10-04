@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FoodHub | Register</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <!-- LEFT SIDE -->
+
+        <div class="auth-left">
+
+            <div class="brand">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Food<span>Hub</span></span>
+            </div>
+
+            <div class="left-content">
+
+                <h1>
+                    Delicious food,
+                    <span>just a few clicks away.</span>
+                </h1>
+
+                <p>
+                    Create your FoodHub account and discover
+                    delicious meals from your favorite restaurants.
+                </p>
+
+                <div class="benefits">
+
+                    <div class="benefit">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Discover delicious food</span>
+                    </div>
+
+                    <div class="benefit">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Order food online easily</span>
+                    </div>
+
+                    <div class="benefit">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Track your orders</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+
+        <div class="auth-right">
+
+            <div class="auth-box">
+
+                <a href="/" class="back-home">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Home
+                </a>
+
+                <div class="auth-heading">
+
+                    <h2>Create Account</h2>
+
+                    <p>
+                        Join FoodHub and start ordering your
+                        favorite food.
+                    </p>
+
+                </div>
+
+
+                <form action="/register" method="post">
+
+                    <!-- NAME -->
+
+                    <div class="form-group">
+
+                        <label for="name">Full Name</label>
+
+                        <div class="input-box">
+
+                            <i class="fa-regular fa-user"></i>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder="Enter your full name"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="email">Email Address</label>
+
+                        <div class="input-box">
+
+                            <i class="fa-regular fa-envelope"></i>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Enter your email"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="password">Password</label>
+
+                        <div class="input-box">
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Create a password"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="confirmPassword">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-box">
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                placeholder="Confirm your password"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TERMS -->
+
+                    <div class="terms">
+
+                        <input
+                            type="checkbox"
+                            id="terms"
+                            required>
+
+                        <label for="terms">
+                            I agree to the Terms & Conditions
+                        </label>
+
+                    </div>
+
+
+                    <button type="submit" class="auth-btn">
+                        Create Account
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                </form>
+
+
+                <div class="auth-footer">
+
+                    <p>
+                        Already have an account?
+                        <a href="/login">Login</a>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

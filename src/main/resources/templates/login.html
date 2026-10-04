@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | FoodHub</title>
+
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <!-- ================= LEFT SIDE ================= -->
+
+    <div class="auth-left">
+
+        <div class="brand">
+            <span class="brand-icon">🍴</span>
+            <span>FoodHub</span>
+        </div>
+
+        <div class="left-content">
+
+            <h1>Welcome Back!</h1>
+
+            <p>
+                Login to FoodHub and continue ordering
+                your favorite food from the comfort of your home.
+            </p>
+
+            <div class="benefits">
+
+                <!-- Benefit 1 -->
+
+                <div class="benefit">
+
+                    <span>🍕</span>
+
+                    <div>
+                        <h3>Delicious Food</h3>
+                        <p>Explore your favorite dishes.</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Benefit 2 -->
+
+                <div class="benefit">
+
+                    <span>🚀</span>
+
+                    <div>
+                        <h3>Fast Delivery</h3>
+                        <p>Get your food delivered quickly.</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Benefit 3 -->
+
+                <div class="benefit">
+
+                    <span>🔒</span>
+
+                    <div>
+                        <h3>Secure Account</h3>
+                        <p>Your account information is protected.</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= RIGHT SIDE ================= -->
+
+    <div class="auth-right">
+
+        <div class="auth-card">
+
+            <!-- Mobile Brand -->
+
+            <div class="mobile-brand">
+                🍴 FoodHub
+            </div>
+
+
+            <!-- Heading -->
+
+            <h2>Login</h2>
+
+            <p class="auth-subtitle">
+                Sign in to your FoodHub account
+            </p>
+
+
+            <!-- ================= LOGIN FORM ================= -->
+
+            <!-- IMPORTANT:
+                 No action="/login"
+                 No method="post"
+
+                 JavaScript will send the request as JSON.
+            -->
+
+            <form id="loginForm">
+
+                <!-- Email -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required>
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required>
+
+                </div>
+
+
+                <!-- Login Button -->
+
+                <button
+                    type="submit"
+                    class="auth-button"
+                    id="loginButton">
+
+                    Login
+
+                </button>
+
+            </form>
+
+
+            <!-- ================= MESSAGE ================= -->
+
+            <p
+                id="loginMessage"
+                class="message">
+            </p>
+
+
+            <!-- ================= REGISTER LINK ================= -->
+
+            <div class="auth-footer">
+
+                <p>
+                    Don't have an account?
+
+                    <a href="/register">
+                        Create an account
+                    </a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= LOGIN JAVASCRIPT ================= -->
+
+<script>
+
+document
+    .getElementById("loginForm")
+    .addEventListener("submit", async function(event) {
+
+        /*
+         * Prevent normal HTML form submission.
+         *
+         * This is important because normal form submission
+         * sends application/x-www-form-urlencoded data.
+         *
+         * Our Spring Boot API expects JSON.
+         */
+
+        event.preventDefault();
+
+
+        // Get email
+
+        const email =
+            document.getElementById("email").value.trim();
+
+
+        // Get password
+
+        const password =
+            document.getElementById("password").value;
+
+
+        // Message element
+
+        const message =
+            document.getElementById("loginMessage");
+
+
+        // Login button
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+
+        // Clear previous message
+
+        message.textContent = "";
+
+        message.className = "message";
+
+
+        // Disable button while request is running
+
+        loginButton.disabled = true;
+
+        loginButton.textContent = "Logging in...";
+
+
+        try {
+
+            /*
+             * Send JSON request to Spring Boot
+             */
+
+            const response = await fetch("/login", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    email: email,
+
+                    password: password
+
+                })
+
+            });
+
+
+            /*
+             * Read backend response
+             */
+
+            const result =
+                await response.text();
+
+
+            /*
+             * Login successful
+             */
+
+            if (result === "Login successful!") {
+
+                message.textContent =
+                    "Login successful!";
+
+                message.className =
+                    "message success";
+
+
+                /*
+                 * Redirect to FoodHub home page
+                 * after 1 second.
+                 */
+
+                setTimeout(function() {
+
+                    window.location.href = "/";
+
+                }, 1000);
+
+            }
+
+
+            /*
+             * Login failed
+             */
+
+            else {
+
+                message.textContent =
+                    result;
+
+                message.className =
+                    "message error";
+
+
+                // Enable button again
+
+                loginButton.disabled = false;
+
+                loginButton.textContent =
+                    "Login";
+
+            }
+
+        }
+
+
+        /*
+         * Server/network error
+         */
+
+        catch (error) {
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+
+            message.textContent =
+                "Unable to connect to the server.";
+
+            message.className =
+                "message error";
+
+
+            // Enable button again
+
+            loginButton.disabled = false;
+
+            loginButton.textContent =
+                "Login";
+
+        }
+
+    });
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>FoodHub | Online Food Ordering</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/home.css}">
+
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+
+        <!-- LOGO -->
+
+        <a href="/" class="logo">
+
+            <span class="logo-icon">
+                🍴
+            </span>
+
+            <span>
+                FoodHub
+            </span>
+
+        </a>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="nav-menu">
+
+            <a href="/" class="active">
+                Home
+            </a>
+
+            <a href="/#categories">
+                Categories
+            </a>
+
+            <a href="/#popular">
+                Popular
+            </a>
+
+            <a href="/#about">
+                About
+            </a>
+
+        </nav>
+
+
+        <!-- =================================================
+             ACCOUNT AREA
+        ================================================= -->
+
+        <div class="nav-actions">
+
+
+            <!-- =============================================
+                 USER NOT LOGGED IN
+            ============================================== -->
+
+            <th:block th:if="${userName == null}">
+
+                <a href="/login"
+                   class="login-btn">
+
+                    Login
+
+                </a>
+
+
+                <a href="/register"
+                   class="register-btn">
+
+                    Register
+
+                </a>
+
+            </th:block>
+
+
+            <!-- =============================================
+                 USER LOGGED IN
+            ============================================== -->
+
+            <th:block th:if="${userName != null}">
+
+                <span class="welcome-user">
+
+                    Welcome,
+
+                    <strong
+                        th:text="${userName}">
+                    </strong>
+
+                </span>
+
+
+                <a href="/logout"
+                   class="logout-btn">
+
+                    Logout
+
+                </a>
+
+            </th:block>
+
+
+            <!-- CART -->
+
+            <a href="/cart"
+               class="cart-link"
+               title="Shopping Cart">
+
+                🛒
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     HERO SECTION
+===================================================== -->
+
+<section class="hero">
+
+    <div class="hero-container">
+
+
+        <div class="hero-content">
+
+            <span class="hero-label">
+
+                🍽️ Delicious food, delivered fast
+
+            </span>
+
+
+            <h1>
+
+                Your favorite food
+
+                <span>
+                    at your doorstep.
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                Discover delicious meals from your favorite
+                restaurants and enjoy fast, convenient delivery
+                right to your door.
+
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a href="/#popular"
+                   class="primary-btn">
+
+                    Explore Food
+
+                    <span>
+                        →
+                    </span>
+
+                </a>
+
+
+                <a href="/#categories"
+                   class="secondary-btn">
+
+                    View Categories
+
+                </a>
+
+            </div>
+
+
+            <div class="hero-stats">
+
+                <div class="hero-stat">
+
+                    <strong>
+                        4.8
+                    </strong>
+
+                    <span>
+                        ⭐ Food Rating
+                    </span>
+
+                </div>
+
+
+                <div class="hero-stat">
+
+                    <strong>
+                        30 min
+                    </strong>
+
+                    <span>
+                        Fast Delivery
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-image">
+
+            <div class="food-circle">
+
+                🍔
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CATEGORY SECTION
+===================================================== -->
+
+<section class="categories-section"
+         id="categories">
+
+    <div class="section-container">
+
+
+        <div class="section-header">
+
+            <div>
+
+                <span class="section-label">
+                    EXPLORE
+                </span>
+
+                <h2>
+                    Browse by Category
+                </h2>
+
+            </div>
+
+
+            <a href="#popular"
+               class="view-all">
+
+                View all
+
+                <span>
+                    →
+                </span>
+
+            </a>
+
+        </div>
+
+
+        <div class="category-grid">
+
+
+            <a href="#popular"
+               class="category-card">
+
+                <div class="category-icon">
+                    🍕
+                </div>
+
+                <h3>
+                    Pizza
+                </h3>
+
+                <p>
+                    25+ Items
+                </p>
+
+            </a>
+
+
+            <a href="#popular"
+               class="category-card">
+
+                <div class="category-icon">
+                    🍔
+                </div>
+
+                <h3>
+                    Burgers
+                </h3>
+
+                <p>
+                    30+ Items
+                </p>
+
+            </a>
+
+
+            <a href="#popular"
+               class="category-card">
+
+                <div class="category-icon">
+                    🍜
+                </div>
+
+                <h3>
+                    Noodles
+                </h3>
+
+                <p>
+                    20+ Items
+                </p>
+
+            </a>
+
+
+            <a href="#popular"
+               class="category-card">
+
+                <div class="category-icon">
+                    🍛
+                </div>
+
+                <h3>
+                    Indian
+                </h3>
+
+                <p>
+                    40+ Items
+                </p>
+
+            </a>
+
+
+            <a href="#popular"
+               class="category-card">
+
+                <div class="category-icon">
+                    🍰
+                </div>
+
+                <h3>
+                    Desserts
+                </h3>
+
+                <p>
+                    18+ Items
+                </p>
+
+            </a>
+
+
+            <a href="#popular"
+               class="category-card">
+
+                <div class="category-icon">
+                    🥤
+                </div>
+
+                <h3>
+                    Beverages
+                </h3>
+
+                <p>
+                    15+ Items
+                </p>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     POPULAR FOOD SECTION
+===================================================== -->
+
+<section class="popular-section"
+         id="popular">
+
+    <div class="section-container">
+
+
+        <div class="section-header">
+
+            <div>
+
+                <span class="section-label">
+                    CUSTOMER FAVORITES
+                </span>
+
+                <h2>
+                    Popular Food
+                </h2>
+
+            </div>
+
+
+            <a href="#popular"
+               class="view-all">
+
+                View all
+
+                <span>
+                    →
+                </span>
+
+            </a>
+
+        </div>
+
+
+        <div class="food-grid">
+
+
+            <!-- CHEESE PIZZA -->
+
+            <div class="food-card">
+
+                <div class="food-image pizza-bg">
+
+                    <span class="food-badge">
+                        🍕 Popular
+                    </span>
+
+                    <span class="rating">
+                        ⭐ 4.8
+                    </span>
+
+                    <div class="food-emoji">
+                        🍕
+                    </div>
+
+                </div>
+
+
+                <div class="food-info">
+
+                    <h3>
+                        Cheese Pizza
+                    </h3>
+
+                    <p>
+                        Classic cheese pizza with
+                        fresh ingredients.
+                    </p>
+
+
+                    <div class="food-bottom">
+
+                        <strong>
+                            ₹249
+                        </strong>
+
+                        <a href="/cart"
+                           class="add-btn">
+
+                            +
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CLASSIC BURGER -->
+
+            <div class="food-card">
+
+                <div class="food-image burger-bg">
+
+                    <span class="food-badge">
+                        🍔 Best Seller
+                    </span>
+
+                    <span class="rating">
+                        ⭐ 4.9
+                    </span>
+
+                    <div class="food-emoji">
+                        🍔
+                    </div>
+
+                </div>
+
+
+                <div class="food-info">
+
+                    <h3>
+                        Classic Burger
+                    </h3>
+
+                    <p>
+                        Juicy burger with fresh
+                        vegetables and cheese.
+                    </p>
+
+
+                    <div class="food-bottom">
+
+                        <strong>
+                            ₹199
+                        </strong>
+
+                        <a href="/cart"
+                           class="add-btn">
+
+                            +
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- VEG NOODLES -->
+
+            <div class="food-card">
+
+                <div class="food-image noodles-bg">
+
+                    <span class="food-badge">
+                        🍜 Trending
+                    </span>
+
+                    <span class="rating">
+                        ⭐ 4.7
+                    </span>
+
+                    <div class="food-emoji">
+                        🍜
+                    </div>
+
+                </div>
+
+
+                <div class="food-info">
+
+                    <h3>
+                        Veg Noodles
+                    </h3>
+
+                    <p>
+                        Delicious noodles cooked
+                        with fresh vegetables.
+                    </p>
+
+
+                    <div class="food-bottom">
+
+                        <strong>
+                            ₹179
+                        </strong>
+
+                        <a href="/cart"
+                           class="add-btn">
+
+                            +
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- VEG BIRYANI -->
+
+            <div class="food-card">
+
+                <div class="food-image biryani-bg">
+
+                    <span class="food-badge">
+                        🍛 Special
+                    </span>
+
+                    <span class="rating">
+                        ⭐ 4.8
+                    </span>
+
+                    <div class="food-emoji">
+                        🍛
+                    </div>
+
+                </div>
+
+
+                <div class="food-info">
+
+                    <h3>
+                        Veg Biryani
+                    </h3>
+
+                    <p>
+                        Aromatic rice with delicious
+                        spices and vegetables.
+                    </p>
+
+
+                    <div class="food-bottom">
+
+                        <strong>
+                            ₹229
+                        </strong>
+
+                        <a href="/cart"
+                           class="add-btn">
+
+                            +
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ABOUT SECTION
+===================================================== -->
+
+<section class="about-section"
+         id="about">
+
+    <div class="section-container">
+
+        <div class="about-content">
+
+
+            <div class="about-text">
+
+                <span class="section-label">
+                    WHY FOODHUB?
+                </span>
+
+                <h2>
+
+                    Food ordering made
+                    simple and convenient.
+
+                </h2>
+
+
+                <p>
+
+                    FoodHub brings delicious food and
+                    customers together through a simple
+                    and convenient online ordering platform.
+
+                </p>
+
+            </div>
+
+
+            <div class="features-grid">
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        🚀
+                    </div>
+
+                    <h3>
+                        Fast Delivery
+                    </h3>
+
+                    <p>
+                        Get your food delivered quickly.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        ⭐
+                    </div>
+
+                    <h3>
+                        Quality Food
+                    </h3>
+
+                    <p>
+                        Fresh and delicious meals.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        🛒
+                    </div>
+
+                    <h3>
+                        Easy Ordering
+                    </h3>
+
+                    <p>
+                        Simple and convenient ordering.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <a href="/" class="logo">
+
+                <span class="logo-icon">
+                    🍴
+                </span>
+
+                <span>
+                    FoodHub
+                </span>
+
+            </a>
+
+
+            <p>
+
+                Delicious food delivered right
+                to your doorstep.
+
+            </p>
+
+        </div>
+
+
+
+        <div class="footer-column">
+
+            <h3>
+                Quick Links
+            </h3>
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/#categories">
+                Categories
+            </a>
+
+            <a href="/#popular">
+                Popular Food
+            </a>
+
+            <a href="/#about">
+                About
+            </a>
+
+        </div>
+
+
+
+        <div class="footer-column">
+
+            <h3>
+                Account
+            </h3>
+
+
+            <!-- NOT LOGGED IN -->
+
+            <th:block th:if="${userName == null}">
+
+                <a href="/login">
+                    Login
+                </a>
+
+                <a href="/register">
+                    Register
+                </a>
+
+            </th:block>
+
+
+            <!-- LOGGED IN -->
+
+            <th:block th:if="${userName != null}">
+
+                <span class="footer-user">
+
+                    Logged in as:
+
+                    <strong
+                        th:text="${userName}">
+                    </strong>
+
+                </span>
+
+
+                <a href="/logout">
+                    Logout
+                </a>
+
+            </th:block>
+
+
+            <a href="/cart">
+                Cart
+            </a>
+
+
+            <a href="#">
+                Orders
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 FoodHub. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>
