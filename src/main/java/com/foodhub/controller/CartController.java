@@ -34,6 +34,8 @@ public class CartController {
         this.userRepository = userRepository;
     }
 
+    // ================= CART PAGE =================
+
     @GetMapping("/cart")
     public String cart(
             HttpSession session,
@@ -42,6 +44,7 @@ public class CartController {
         Long userId =
                 (Long) session.getAttribute("userId");
 
+        // User must be logged in
         if (userId == null) {
             return "redirect:/login";
         }
@@ -51,22 +54,26 @@ public class CartController {
 
         double cartTotal = 0;
 
-        for (CartItem item : cartItems) {
-            cartTotal += item.getTotalPrice();
-        }
-
         int cartCount = 0;
 
         for (CartItem item : cartItems) {
+
+            cartTotal += item.getTotalPrice();
+
             cartCount += item.getQuantity();
         }
 
         model.addAttribute("cartItems", cartItems);
+
         model.addAttribute("cartCount", cartCount);
+
         model.addAttribute("cartTotal", cartTotal);
 
         return "cart";
     }
+
+
+    // ================= ADD TO CART =================
 
     @PostMapping("/cart/add/{foodId}")
     public String addToCart(
@@ -76,6 +83,7 @@ public class CartController {
         Long userId =
                 (Long) session.getAttribute("userId");
 
+        // User must be logged in
         if (userId == null) {
             return "redirect:/login";
         }
@@ -92,6 +100,7 @@ public class CartController {
             return "redirect:/foods";
         }
 
+        // Check stock
         if (food.getStock() <= 0) {
             return "redirect:/foods";
         }
@@ -103,7 +112,9 @@ public class CartController {
 
         if (cartItem != null) {
 
+            // Increase quantity only if stock is available
             if (cartItem.getQuantity() < food.getStock()) {
+
                 cartItem.setQuantity(
                         cartItem.getQuantity() + 1
                 );
@@ -118,6 +129,126 @@ public class CartController {
 
             cartItemRepository.save(newCartItem);
         }
+
+        return "redirect:/cart";
+    }
+
+
+    // ================= INCREASE QUANTITY =================
+
+    @PostMapping("/cart/increase/{id}")
+    public String increaseQuantity(
+            @PathVariable Long id,
+            HttpSession session) {
+
+        Long userId =
+                (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        CartItem cartItem =
+                cartItemRepository.findById(id)
+                        .orElse(null);
+
+        if (cartItem == null) {
+            return "redirect:/cart";
+        }
+
+        // Security check
+        if (!cartItem.getUser().getId().equals(userId)) {
+            return "redirect:/cart";
+        }
+
+        Food food = cartItem.getFood();
+
+        // Check stock before increasing
+        if (cartItem.getQuantity() < food.getStock()) {
+
+            cartItem.setQuantity(
+                    cartItem.getQuantity() + 1
+            );
+
+            cartItemRepository.save(cartItem);
+        }
+
+        return "redirect:/cart";
+    }
+
+
+    // ================= DECREASE QUANTITY =================
+
+    @PostMapping("/cart/decrease/{id}")
+    public String decreaseQuantity(
+            @PathVariable Long id,
+            HttpSession session) {
+
+        Long userId =
+                (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        CartItem cartItem =
+                cartItemRepository.findById(id)
+                        .orElse(null);
+
+        if (cartItem == null) {
+            return "redirect:/cart";
+        }
+
+        // Security check
+        if (!cartItem.getUser().getId().equals(userId)) {
+            return "redirect:/cart";
+        }
+
+        if (cartItem.getQuantity() > 1) {
+
+            cartItem.setQuantity(
+                    cartItem.getQuantity() - 1
+            );
+
+            cartItemRepository.save(cartItem);
+
+        } else {
+
+            cartItemRepository.delete(cartItem);
+        }
+
+        return "redirect:/cart";
+    }
+
+
+    // ================= REMOVE ITEM =================
+
+    @PostMapping("/cart/remove/{id}")
+    public String removeFromCart(
+            @PathVariable Long id,
+            HttpSession session) {
+
+        Long userId =
+                (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        CartItem cartItem =
+                cartItemRepository.findById(id)
+                        .orElse(null);
+
+        if (cartItem == null) {
+            return "redirect:/cart";
+        }
+
+        // Security check
+        if (!cartItem.getUser().getId().equals(userId)) {
+            return "redirect:/cart";
+        }
+
+        cartItemRepository.delete(cartItem);
 
         return "redirect:/cart";
     }

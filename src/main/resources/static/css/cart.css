@@ -189,7 +189,6 @@ a {
 
 .login-btn:hover {
     background: #ea580c;
-
     transform: translateY(-1px);
 }
 
@@ -347,7 +346,6 @@ a {
     justify-content: center;
 
     color: #f97316;
-
     background: #fff7ed;
 
     border-radius: 50%;
@@ -423,21 +421,321 @@ a {
     grid-template-columns: 1fr 340px;
 
     gap: 30px;
+
+    align-items: start;
 }
 
 
-/* Cart items */
+/* =========================
+   CART ITEMS CONTAINER
+========================= */
 
 .cart-items {
-    min-height: 300px;
+    display: flex;
 
-    padding: 25px;
+    flex-direction: column;
+
+    gap: 16px;
+}
+
+
+/* =========================
+   INDIVIDUAL CART ITEM
+========================= */
+
+.cart-item {
+    display: grid;
+
+    grid-template-columns:
+        95px
+        minmax(180px, 1fr)
+        auto
+        auto
+        42px;
+
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 18px;
 
     background: #ffffff;
 
     border: 1px solid #eeeeee;
 
     border-radius: 15px;
+
+    transition: all 0.3s ease;
+}
+
+.cart-item:hover {
+    border-color: #fed7aa;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.05);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   FOOD IMAGE
+========================= */
+
+.cart-item-image {
+    width: 95px;
+    height: 95px;
+
+    overflow: hidden;
+
+    background: #fff7ed;
+
+    border-radius: 12px;
+}
+
+.cart-item-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition: transform 0.3s ease;
+}
+
+.cart-item:hover .cart-item-image img {
+    transform: scale(1.05);
+}
+
+
+/* =========================
+   FOOD DETAILS
+========================= */
+
+.cart-item-details {
+    min-width: 0;
+}
+
+.cart-item-details h3 {
+    margin-bottom: 7px;
+
+    color: #111827;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.food-category {
+    display: inline-block;
+
+    margin-bottom: 9px;
+
+    padding: 4px 8px;
+
+    color: #ea580c;
+
+    background: #fff7ed;
+
+    border-radius: 5px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    text-transform: capitalize;
+}
+
+.food-price {
+    color: #6b7280;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.food-price span {
+    color: #111827;
+
+    font-weight: 700;
+}
+
+
+/* =========================
+   QUANTITY
+========================= */
+
+.quantity-section {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.quantity-label {
+    color: #9ca3af;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.6px;
+}
+
+.quantity-controls {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 4px;
+
+    background: #f9fafb;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 8px;
+}
+
+.quantity-controls form {
+    display: flex;
+
+    margin: 0;
+}
+
+.quantity-btn {
+    width: 27px;
+    height: 27px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #374151;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+    color: #ffffff;
+
+    background: #f97316;
+
+    border-color: #f97316;
+}
+
+.quantity-btn i {
+    font-size: 9px;
+}
+
+.quantity {
+    min-width: 24px;
+
+    text-align: center;
+
+    color: #111827;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+/* =========================
+   ITEM TOTAL
+========================= */
+
+.item-total {
+    min-width: 80px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 7px;
+}
+
+.total-label {
+    color: #9ca3af;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.6px;
+}
+
+.item-total strong {
+    color: #111827;
+
+    font-size: 15px;
+
+    font-weight: 800;
+}
+
+
+/* =========================
+   REMOVE BUTTON
+========================= */
+
+.remove-btn {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #9ca3af;
+
+    background: #ffffff;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+}
+
+.remove-btn:hover {
+    color: #dc2626;
+
+    background: #fef2f2;
+
+    border-color: #fecaca;
+}
+
+.remove-btn i {
+    font-size: 12px;
 }
 
 
@@ -458,6 +756,10 @@ a {
 
     box-shadow:
         0 8px 25px rgba(0, 0, 0, 0.04);
+
+    position: sticky;
+
+    top: 100px;
 }
 
 .cart-summary h3 {
@@ -474,6 +776,7 @@ a {
     display: flex;
 
     align-items: center;
+
     justify-content: space-between;
 
     padding: 13px 0;
@@ -491,8 +794,28 @@ a {
     font-size: 18px;
 }
 
+.summary-divider {
+    height: 1px;
 
-/* Checkout */
+    margin: 5px 0;
+
+    background: #f1f1f1;
+}
+
+.total-row {
+    border-bottom: none;
+}
+
+.total-row span:first-child {
+    color: #111827;
+
+    font-weight: 700;
+}
+
+
+/* =========================
+   CHECKOUT
+========================= */
 
 .checkout-btn {
     width: 100%;
@@ -504,6 +827,7 @@ a {
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     gap: 8px;
@@ -532,6 +856,39 @@ a {
 
     box-shadow:
         0 8px 20px rgba(249, 115, 22, 0.20);
+}
+
+
+/* =========================
+   CONTINUE SHOPPING
+========================= */
+
+.continue-shopping {
+    margin-top: 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    color: #6b7280;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    transition: color 0.3s ease;
+}
+
+.continue-shopping:hover {
+    color: #f97316;
+}
+
+.continue-shopping i {
+    font-size: 9px;
 }
 
 
@@ -632,6 +989,32 @@ a {
    RESPONSIVE
 ========================= */
 
+@media (max-width: 1100px) {
+
+    .cart-item {
+        grid-template-columns:
+            85px
+            minmax(150px, 1fr)
+            auto
+            auto
+            38px;
+
+        gap: 12px;
+
+        padding: 15px;
+    }
+
+    .cart-item-image {
+        width: 85px;
+        height: 85px;
+    }
+
+    .cart-summary {
+        top: 90px;
+    }
+}
+
+
 @media (max-width: 950px) {
 
     .nav-links {
@@ -640,6 +1023,31 @@ a {
 
     .cart-content {
         grid-template-columns: 1fr 300px;
+    }
+
+    .cart-item {
+        grid-template-columns:
+            80px
+            1fr
+            auto;
+
+        gap: 15px;
+    }
+
+    .quantity-section {
+        grid-column: 2;
+        align-items: flex-start;
+    }
+
+    .item-total {
+        grid-column: 3;
+        grid-row: 1 / span 2;
+    }
+
+    .remove-btn {
+        grid-column: 3;
+        grid-row: 2;
+        justify-self: end;
     }
 
     .footer-container {
@@ -692,6 +1100,40 @@ a {
 
     .cart-content {
         grid-template-columns: 1fr;
+    }
+
+    .cart-summary {
+        position: static;
+    }
+
+    .cart-item {
+        grid-template-columns: 75px 1fr auto;
+
+        gap: 13px;
+    }
+
+    .cart-item-image {
+        width: 75px;
+        height: 75px;
+    }
+
+    .cart-item-details h3 {
+        font-size: 14px;
+    }
+
+    .quantity-section {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .item-total {
+        grid-column: 3;
+        grid-row: 1;
+    }
+
+    .remove-btn {
+        grid-column: 3;
+        grid-row: 2;
     }
 
     .footer-container {
@@ -762,8 +1204,55 @@ a {
         font-size: 21px;
     }
 
+    .cart-item {
+        grid-template-columns: 65px 1fr;
+
+        gap: 12px;
+
+        padding: 14px;
+    }
+
+    .cart-item-image {
+        width: 65px;
+        height: 65px;
+    }
+
+    .cart-item-details h3 {
+        font-size: 13px;
+    }
+
+    .food-category {
+        font-size: 9px;
+    }
+
+    .quantity-section {
+        grid-column: 1 / -1;
+        grid-row: auto;
+
+        align-items: flex-start;
+    }
+
+    .item-total {
+        grid-column: 1 / -1;
+        grid-row: auto;
+
+        align-items: flex-start;
+    }
+
+    .remove-btn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+    }
+
+    .cart-item {
+        position: relative;
+        padding-right: 55px;
+    }
+
     .footer-container {
         grid-template-columns: 1fr;
+
         gap: 30px;
     }
 

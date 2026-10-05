@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Order Successful - FoodHub</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+    <style>
+
+        /* =====================================================
+           GLOBAL
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fffaf5;
+            color: #222;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #eeeeee;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 7%;
+
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+
+        /* LOGO */
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            color: #ff6b00;
+
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .logo i {
+            font-size: 26px;
+        }
+
+
+        /* NAVIGATION */
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #444;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ff6b00;
+        }
+
+
+        /* NAV RIGHT */
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+
+        /* CART */
+
+        .cart-link {
+            position: relative;
+
+            color: #333;
+
+            font-size: 20px;
+
+            transition: 0.3s;
+        }
+
+        .cart-link:hover {
+            color: #ff6b00;
+        }
+
+
+        /* CART BADGE */
+
+        .cart-badge {
+            position: absolute;
+
+            top: -9px;
+            right: -10px;
+
+            min-width: 18px;
+            height: 18px;
+
+            padding: 0 5px;
+
+            background: #ff6b00;
+            color: white;
+
+            border-radius: 50px;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        /* PROFILE */
+
+        .profile-link {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            background: #fff1e6;
+
+            color: #ff6b00;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 17px;
+
+            transition: 0.3s;
+        }
+
+        .profile-link:hover {
+            background: #ff6b00;
+            color: white;
+        }
+
+
+        /* =====================================================
+           SUCCESS SECTION
+        ===================================================== */
+
+        .success-section {
+            min-height: calc(100vh - 72px);
+
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+
+            padding: 65px 20px 80px;
+        }
+
+
+        .success-container {
+            width: 100%;
+            max-width: 850px;
+        }
+
+
+        /* =====================================================
+           SUCCESS CARD
+        ===================================================== */
+
+        .success-card {
+            background: white;
+
+            border-radius: 22px;
+
+            padding: 45px;
+
+            box-shadow:
+                0 15px 45px rgba(0, 0, 0, 0.08);
+
+            border: 1px solid #f1f1f1;
+
+            text-align: center;
+        }
+
+
+        /* =====================================================
+           SUCCESS ICON
+        ===================================================== */
+
+        .success-icon {
+            width: 90px;
+            height: 90px;
+
+            margin: 0 auto 24px;
+
+            border-radius: 50%;
+
+            background: #fff1e6;
+
+            color: #ff6b00;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 42px;
+
+            animation: successPop 0.5s ease;
+        }
+
+
+        @keyframes successPop {
+
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+        }
+
+
+        /* =====================================================
+           TITLE
+        ===================================================== */
+
+        .success-card h1 {
+            font-size: 30px;
+
+            font-weight: 800;
+
+            color: #222;
+
+            margin-bottom: 12px;
+        }
+
+
+        .success-message {
+            color: #777;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+
+            max-width: 600px;
+
+            margin: 0 auto 32px;
+        }
+
+
+        /* =====================================================
+           ORDER ID
+        ===================================================== */
+
+        .order-id-box {
+            background: #fff8f2;
+
+            border: 1px dashed #ffb37a;
+
+            border-radius: 12px;
+
+            padding: 15px 20px;
+
+            margin-bottom: 30px;
+        }
+
+        .order-id-label {
+            display: block;
+
+            color: #888;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            margin-bottom: 5px;
+        }
+
+        .order-id {
+            color: #ff6b00;
+
+            font-size: 20px;
+
+            font-weight: 800;
+        }
+
+
+        /* =====================================================
+           ORDER DETAILS
+        ===================================================== */
+
+        .details-title {
+            text-align: left;
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            color: #222;
+
+            margin-bottom: 16px;
+        }
+
+
+        .details-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+
+            text-align: left;
+
+            margin-bottom: 30px;
+        }
+
+
+        .detail-box {
+            padding: 18px;
+
+            border: 1px solid #eeeeee;
+
+            border-radius: 12px;
+
+            background: #ffffff;
+        }
+
+
+        .detail-label {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            color: #888;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            margin-bottom: 8px;
+        }
+
+
+        .detail-label i {
+            color: #ff6b00;
+
+            width: 15px;
+        }
+
+
+        .detail-value {
+            color: #333;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            line-height: 1.5;
+
+            word-break: break-word;
+        }
+
+
+        /* =====================================================
+           TOTAL BOX
+        ===================================================== */
+
+        .total-box {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 20px 22px;
+
+            background: #ff6b00;
+
+            color: white;
+
+            border-radius: 14px;
+
+            margin-bottom: 30px;
+        }
+
+
+        .total-label {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 15px;
+
+            font-weight: 600;
+        }
+
+
+        .total-label i {
+            font-size: 18px;
+        }
+
+
+        .total-amount {
+            font-size: 23px;
+
+            font-weight: 800;
+        }
+
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
+
+        .status-row {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 32px;
+        }
+
+
+        .status-label {
+            color: #777;
+
+            font-size: 14px;
+
+            font-weight: 500;
+        }
+
+
+        .status-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 7px 14px;
+
+            border-radius: 50px;
+
+            background: #eaf8ef;
+
+            color: #198754;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        .button-group {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 14px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .btn {
+            min-width: 180px;
+
+            padding: 14px 22px;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 9px;
+
+            transition: 0.3s;
+        }
+
+
+        /* PRIMARY */
+
+        .btn-primary {
+            background: #ff6b00;
+
+            color: white;
+
+            box-shadow:
+                0 7px 18px rgba(255, 107, 0, 0.25);
+        }
+
+
+        .btn-primary:hover {
+            background: #e85f00;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* SECONDARY */
+
+        .btn-secondary {
+            background: white;
+
+            color: #333;
+
+            border: 1px solid #dddddd;
+        }
+
+
+        .btn-secondary:hover {
+            border-color: #ff6b00;
+
+            color: #ff6b00;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =====================================================
+           THANK YOU
+        ===================================================== */
+
+        .thank-you {
+            margin-top: 28px;
+
+            color: #999;
+
+            font-size: 13px;
+        }
+
+        .thank-you i {
+            color: #ff6b00;
+
+            margin-right: 5px;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+            background: #1f1f1f;
+
+            color: #aaa;
+
+            text-align: center;
+
+            padding: 25px 20px;
+
+            font-size: 13px;
+        }
+
+        .footer strong {
+            color: #ff6b00;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 768px) {
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .success-section {
+                padding: 35px 15px 50px;
+            }
+
+            .success-card {
+                padding: 30px 20px;
+            }
+
+            .success-card h1 {
+                font-size: 25px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .total-box {
+                padding: 18px;
+            }
+
+            .total-amount {
+                font-size: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+        }
+
+
+        @media (max-width: 450px) {
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .logo i {
+                font-size: 22px;
+            }
+
+            .success-icon {
+                width: 75px;
+                height: 75px;
+
+                font-size: 34px;
+            }
+
+            .success-card h1 {
+                font-size: 22px;
+            }
+
+            .success-message {
+                font-size: 13px;
+            }
+
+            .order-id {
+                font-size: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<header class="navbar">
+
+
+    <!-- LOGO -->
+
+    <a href="/foods"
+       class="logo">
+
+        <i class="fa-solid fa-utensils"></i>
+
+        FoodHub
+
+    </a>
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="nav-links">
+
+        <a href="/home">
+            Home
+        </a>
+
+        <a href="/foods">
+            Food Menu
+        </a>
+
+        <a href="/cart">
+            Cart
+        </a>
+
+        <a href="/orders">
+            My Orders
+        </a>
+
+    </nav>
+
+
+    <!-- RIGHT -->
+
+    <div class="nav-right">
+
+        <a href="/cart"
+           class="cart-link">
+
+            <i class="fa-solid fa-cart-shopping"></i>
+
+        </a>
+
+
+        <a href="/profile"
+           class="profile-link">
+
+            <i class="fa-solid fa-user"></i>
+
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     SUCCESS SECTION
+========================================================= -->
+
+<main class="success-section">
+
+    <div class="success-container">
+
+
+        <div class="success-card">
+
+
+            <!-- SUCCESS ICON -->
+
+            <div class="success-icon">
+
+                <i class="fa-solid fa-check"></i>
+
+            </div>
+
+
+            <!-- TITLE -->
+
+            <h1>
+                Order Placed Successfully!
+            </h1>
+
+
+            <p class="success-message">
+
+                Thank you for ordering with FoodHub!
+                Your order has been received successfully
+                and is being processed.
+
+            </p>
+
+
+            <!-- ORDER ID -->
+
+            <div class="order-id-box">
+
+                <span class="order-id-label">
+                    Your Order ID
+                </span>
+
+                <span class="order-id">
+
+                    #
+                    <span th:text="${order.id}">
+                        1
+                    </span>
+
+                </span>
+
+            </div>
+
+
+
+            <!-- ORDER DETAILS -->
+
+            <h2 class="details-title">
+                Order Details
+            </h2>
+
+
+            <div class="details-grid">
+
+
+                <!-- CUSTOMER NAME -->
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+
+                        <i class="fa-solid fa-user"></i>
+
+                        Customer Name
+
+                    </div>
+
+                    <div class="detail-value"
+                         th:text="${order.customerName}">
+
+                        Customer Name
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PHONE -->
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+
+                        <i class="fa-solid fa-phone"></i>
+
+                        Phone Number
+
+                    </div>
+
+                    <div class="detail-value"
+                         th:text="${order.phone}">
+
+                        Phone Number
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PAYMENT -->
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+
+                        <i class="fa-solid fa-credit-card"></i>
+
+                        Payment Method
+
+                    </div>
+
+                    <div class="detail-value"
+                         th:text="${order.paymentMethod}">
+
+                        COD
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ORDER DATE -->
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+
+                        <i class="fa-solid fa-calendar-days"></i>
+
+                        Order Date
+
+                    </div>
+
+                    <div class="detail-value"
+                         th:text="${#temporals.format(order.orderDate, 'dd MMM yyyy, hh:mm a')}">
+
+                        05 Oct 2026
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DELIVERY ADDRESS -->
+
+                <div class="detail-box"
+                     style="grid-column: 1 / -1;">
+
+                    <div class="detail-label">
+
+                        <i class="fa-solid fa-location-dot"></i>
+
+                        Delivery Address
+
+                    </div>
+
+                    <div class="detail-value"
+                         th:text="${order.address}">
+
+                        Delivery Address
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- TOTAL -->
+
+            <div class="total-box">
+
+                <div class="total-label">
+
+                    <i class="fa-solid fa-receipt"></i>
+
+                    Total Amount
+
+                </div>
+
+                <div class="total-amount">
+
+                    ₹<span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 2)}">
+                        0.00
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- STATUS -->
+
+            <div class="status-row">
+
+                <span class="status-label">
+                    Order Status:
+                </span>
+
+
+                <span class="status-badge">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    <span th:text="${order.status}">
+                        PLACED
+                    </span>
+
+                </span>
+
+            </div>
+
+
+
+            <!-- BUTTONS -->
+
+            <div class="button-group">
+
+
+                <!-- CONTINUE SHOPPING -->
+
+                <a href="/foods"
+                   class="btn btn-primary">
+
+                    <i class="fa-solid fa-utensils"></i>
+
+                    Continue Shopping
+
+                </a>
+
+
+                <!-- MY ORDERS -->
+
+                <a href="/orders"
+                   class="btn btn-secondary">
+
+                    <i class="fa-solid fa-box"></i>
+
+                    View My Orders
+
+                </a>
+
+
+            </div>
+
+
+
+            <!-- THANK YOU -->
+
+            <p class="thank-you">
+
+                <i class="fa-solid fa-heart"></i>
+
+                Thank you for choosing FoodHub!
+
+            </p>
+
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="footer">
+
+    <p>
+
+        © 2026
+        <strong>FoodHub</strong>.
+        All rights reserved.
+
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

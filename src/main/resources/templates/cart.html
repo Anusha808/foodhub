@@ -74,6 +74,7 @@
 
             </a>
 
+
             <a href="/login"
                class="login-btn">
 
@@ -143,7 +144,9 @@
 
 
             <h2>
+
                 Your cart is empty
+
             </h2>
 
 
@@ -172,24 +175,164 @@
         <div class="cart-content"
              th:if="${cartCount > 0}">
 
+
+            <!-- ================= CART ITEMS ================= -->
+
             <div class="cart-items">
 
-                <!--
 
-                    Cart items will be displayed here
-                    when the CartItem system is implemented.
+                <!-- ================= CART ITEM ================= -->
 
-                -->
+                <div class="cart-item"
+                     th:each="item : ${cartItems}">
+
+
+                    <!-- ================= FOOD IMAGE ================= -->
+
+                    <div class="cart-item-image">
+
+                        <img th:src="${item.food.image}"
+                             th:alt="${item.food.name}">
+
+                    </div>
+
+
+                    <!-- ================= FOOD DETAILS ================= -->
+
+                    <div class="cart-item-details">
+
+                        <h3 th:text="${item.food.name}">
+                            Food Name
+                        </h3>
+
+
+                        <p class="food-category"
+                           th:text="${item.food.category}">
+                            Category
+                        </p>
+
+
+                        <p class="food-price">
+
+                            ₹<span
+                                th:text="${item.food.price}">
+                                0.00
+                            </span>
+
+                        </p>
+
+                    </div>
+
+
+                    <!-- ================= QUANTITY ================= -->
+
+                    <div class="quantity-section">
+
+                        <span class="quantity-label">
+                            Quantity
+                        </span>
+
+
+                        <div class="quantity-controls">
+
+
+                            <!-- DECREASE -->
+
+                            <form th:action="@{/cart/decrease/{id}(id=${item.id})}"
+                                  method="post">
+
+                                <button type="submit"
+                                        class="quantity-btn">
+
+                                    <i class="fa-solid fa-minus"></i>
+
+                                </button>
+
+                            </form>
+
+
+                            <!-- CURRENT QUANTITY -->
+
+                            <span class="quantity"
+                                  th:text="${item.quantity}">
+                                1
+                            </span>
+
+
+                            <!-- INCREASE -->
+
+                            <form th:action="@{/cart/increase/{id}(id=${item.id})}"
+                                  method="post">
+
+                                <button type="submit"
+                                        class="quantity-btn">
+
+                                    <i class="fa-solid fa-plus"></i>
+
+                                </button>
+
+                            </form>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================= ITEM TOTAL ================= -->
+
+                    <div class="item-total">
+
+                        <span class="total-label">
+                            Total
+                        </span>
+
+                        <strong>
+
+                            ₹<span
+                                th:text="${item.totalPrice}">
+                                0.00
+                            </span>
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- ================= REMOVE ================= -->
+
+                    <form th:action="@{/cart/remove/{id}(id=${item.id})}"
+                          method="post">
+
+                        <button type="submit"
+                                class="remove-btn"
+                                title="Remove Item">
+
+                            <i class="fa-solid fa-trash"></i>
+
+                        </button>
+
+                    </form>
+
+
+                </div>
 
             </div>
 
 
+            <!-- ================= CART SUMMARY ================= -->
+
             <div class="cart-summary">
 
+
                 <h3>
+
                     Order Summary
+
                 </h3>
 
+
+                <!-- ITEMS -->
 
                 <div class="summary-row">
 
@@ -204,7 +347,14 @@
                 </div>
 
 
-                <div class="summary-row">
+                <!-- DIVIDER -->
+
+                <div class="summary-divider"></div>
+
+
+                <!-- TOTAL -->
+
+                <div class="summary-row total-row">
 
                     <span>
                         Total
@@ -221,13 +371,29 @@
                 </div>
 
 
-                <button class="checkout-btn">
+                <!-- ================= PROCEED TO CHECKOUT ================= -->
+
+                <a href="/checkout"
+                   class="checkout-btn">
 
                     Proceed to Checkout
 
                     <i class="fa-solid fa-arrow-right"></i>
 
-                </button>
+                </a>
+
+
+                <!-- CONTINUE SHOPPING -->
+
+                <a href="/foods"
+                   class="continue-shopping">
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    Continue Shopping
+
+                </a>
+
 
             </div>
 
@@ -244,6 +410,8 @@
 
     <div class="footer-container">
 
+
+        <!-- ================= FOOTER BRAND ================= -->
 
         <div class="footer-brand">
 
@@ -270,6 +438,8 @@
         </div>
 
 
+        <!-- ================= QUICK LINKS ================= -->
+
         <div class="footer-links">
 
             <h4>
@@ -284,12 +454,14 @@
                 Food Menu
             </a>
 
-            <a href="/#about">
-                About Us
+            <a href="/cart">
+                Cart
             </a>
 
         </div>
 
+
+        <!-- ================= ACCOUNT ================= -->
 
         <div class="footer-links">
 
@@ -305,22 +477,20 @@
                 Register
             </a>
 
-            <a href="/cart">
-                Cart
-            </a>
-
         </div>
 
 
     </div>
 
 
+    <!-- ================= FOOTER BOTTOM ================= -->
+
     <div class="footer-bottom">
 
         <p>
 
             © 2026 FoodHub.
-            All rights reserved.
+            All Rights Reserved.
 
         </p>
 

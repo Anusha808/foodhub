@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout | FoodHub</title>
+
+
+    <!-- Google Font -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fffaf5;
+            color: #1f2937;
+        }
+
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #f1f1f1;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+
+        .nav-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 16px 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+
+        .logo {
+            text-decoration: none;
+            color: #1f2937;
+            font-size: 24px;
+            font-weight: 800;
+
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: #f97316;
+            color: white;
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+        }
+
+
+        .nav-links a {
+            text-decoration: none;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+
+        .nav-links a:hover {
+            color: #f97316;
+        }
+
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+
+        .cart-link {
+            text-decoration: none;
+            color: #f97316;
+            font-size: 20px;
+            position: relative;
+        }
+
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -12px;
+
+            min-width: 20px;
+            height: 20px;
+
+            background: #f97316;
+            color: white;
+
+            border-radius: 50%;
+
+            font-size: 11px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .login-btn {
+            text-decoration: none;
+            background: #f97316;
+            color: white;
+
+            padding: 10px 18px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+
+        /* ================= PAGE HEADER ================= */
+
+        .page-header {
+            background: linear-gradient(
+                135deg,
+                #fff1e6,
+                #fffaf5
+            );
+
+            padding: 55px 20px;
+            text-align: center;
+        }
+
+
+        .page-label {
+            color: #f97316;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+
+        .page-header h1 {
+            margin-top: 12px;
+            font-size: 38px;
+            color: #1f2937;
+        }
+
+
+        .page-header h1 span {
+            color: #f97316;
+        }
+
+
+        .page-header p {
+            margin-top: 12px;
+            color: #64748b;
+        }
+
+
+        /* ================= CHECKOUT ================= */
+
+        .checkout-section {
+            padding: 50px 20px 80px;
+        }
+
+
+        .checkout-container {
+            max-width: 1150px;
+            margin: auto;
+
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+        }
+
+
+        /* ================= CARD ================= */
+
+        .checkout-card {
+            background: #ffffff;
+            border: 1px solid #f1e8df;
+            border-radius: 16px;
+            padding: 28px;
+
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+        }
+
+
+        .checkout-card h2 {
+            font-size: 21px;
+            margin-bottom: 25px;
+        }
+
+
+        .checkout-card h2 i {
+            color: #f97316;
+            margin-right: 8px;
+        }
+
+
+        /* ================= FORM ================= */
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+
+        .form-group input,
+        .form-group textarea {
+
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #e5e7eb;
+            border-radius: 9px;
+
+            font-family: inherit;
+            font-size: 14px;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+
+        .form-group textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+
+            border-color: #f97316;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(249, 115, 22, 0.10);
+        }
+
+
+        /* ================= PAYMENT ================= */
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+
+        .payment-option {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 15px;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            cursor: pointer;
+        }
+
+
+        .payment-option:hover {
+            border-color: #f97316;
+            background: #fffaf5;
+        }
+
+
+        .payment-option input {
+            accent-color: #f97316;
+        }
+
+
+        .payment-option i {
+            color: #f97316;
+            font-size: 19px;
+        }
+
+
+        .payment-option strong {
+            display: block;
+            font-size: 14px;
+        }
+
+
+        .payment-option small {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+
+        /* ================= ORDER SUMMARY ================= */
+
+        .order-summary {
+            background: #ffffff;
+            border: 1px solid #f1e8df;
+            border-radius: 16px;
+
+            padding: 28px;
+
+            height: fit-content;
+
+            box-shadow:
+                0 8px 30px
+                rgba(0, 0, 0, 0.04);
+        }
+
+
+        .order-summary h2 {
+            font-size: 21px;
+            margin-bottom: 22px;
+        }
+
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+
+            padding: 12px 0;
+
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+
+        .summary-item-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+
+        .summary-item-quantity {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+
+        .summary-item-price {
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+
+        .summary-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 18px 0;
+        }
+
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-top: 20px;
+            padding-top: 18px;
+
+            border-top: 1px solid #e5e7eb;
+        }
+
+
+        .summary-total span {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+
+        .summary-total strong {
+            color: #f97316;
+            font-size: 24px;
+        }
+
+
+        /* ================= PLACE ORDER ================= */
+
+        .place-order-btn {
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            border: none;
+            border-radius: 10px;
+
+            padding: 15px;
+
+            background: #f97316;
+            color: white;
+
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .place-order-btn:hover {
+            background: #ea580c;
+            transform: translateY(-1px);
+        }
+
+
+        .back-cart {
+
+            display: block;
+
+            text-align: center;
+
+            margin-top: 15px;
+
+            color: #64748b;
+
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .back-cart:hover {
+            color: #f97316;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        .footer {
+            background: #1f2937;
+            color: white;
+            padding: 45px 20px 20px;
+        }
+
+
+        .footer-container {
+
+            max-width: 1150px;
+            margin: auto;
+
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 50px;
+        }
+
+
+        .footer .logo {
+            color: white;
+        }
+
+
+        .footer-brand p {
+
+            color: #cbd5e1;
+
+            margin-top: 14px;
+
+            line-height: 1.7;
+
+            font-size: 14px;
+        }
+
+
+        .footer-links h4 {
+            margin-bottom: 15px;
+        }
+
+
+        .footer-links a {
+
+            display: block;
+
+            color: #cbd5e1;
+
+            text-decoration: none;
+
+            margin-bottom: 10px;
+
+            font-size: 14px;
+        }
+
+
+        .footer-links a:hover {
+            color: #f97316;
+        }
+
+
+        .footer-bottom {
+
+            max-width: 1150px;
+            margin: 35px auto 0;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #374151;
+
+            text-align: center;
+
+            color: #94a3b8;
+
+            font-size: 13px;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+
+        @media (max-width: 600px) {
+
+            .page-header h1 {
+                font-size: 30px;
+            }
+
+            .checkout-card,
+            .order-summary {
+                padding: 20px;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a href="/" class="logo">
+
+            <span class="logo-icon">
+
+                <i class="fa-solid fa-utensils"></i>
+
+            </span>
+
+            FoodHub
+
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/foods">
+                Food Menu
+            </a>
+
+            <a href="/cart">
+                Cart
+            </a>
+
+        </nav>
+
+
+        <div class="nav-actions">
+
+            <a href="/cart"
+               class="cart-link">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+                <span class="cart-count"
+                      th:text="${cartCount}">
+                    0
+                </span>
+
+            </a>
+
+
+            <a href="/login"
+               class="login-btn">
+
+                Login
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- ================= PAGE HEADER ================= -->
+
+<section class="page-header">
+
+    <span class="page-label">
+
+        <i class="fa-solid fa-credit-card"></i>
+
+        CHECKOUT
+
+    </span>
+
+
+    <h1>
+
+        Complete Your
+        <span>Order</span>
+
+    </h1>
+
+
+    <p>
+
+        Enter your delivery details and choose
+        your preferred payment method.
+
+    </p>
+
+</section>
+
+
+<!-- ================= CHECKOUT ================= -->
+
+<main class="checkout-section">
+
+    <div class="checkout-container">
+
+
+        <!-- ================================================= -->
+        <!-- LEFT SIDE -->
+        <!-- ================================================= -->
+
+        <div>
+
+
+            <!-- ================================================= -->
+            <!-- CUSTOMER DETAILS -->
+            <!-- ================================================= -->
+
+            <div class="checkout-card">
+
+                <h2>
+
+                    <i class="fa-solid fa-location-dot"></i>
+
+                    Delivery Details
+
+                </h2>
+
+
+                <!-- IMPORTANT:
+                     Form starts here -->
+
+                <form th:action="@{/checkout/place-order}"
+                      method="post"
+                      id="checkoutForm">
+
+
+                    <!-- ================= NAME ================= -->
+
+                    <div class="form-group">
+
+                        <label for="customerName">
+
+                            Full Name
+
+                        </label>
+
+
+                        <input type="text"
+
+                               id="customerName"
+
+                               name="customerName"
+
+                               th:value="${user.name}"
+
+                               placeholder="Enter your full name"
+
+                               required>
+
+                    </div>
+
+
+                    <!-- ================= PHONE ================= -->
+
+                    <div class="form-group">
+
+                        <label for="phone">
+
+                            Phone Number
+
+                        </label>
+
+
+                        <input type="tel"
+
+                               id="phone"
+
+                               name="phone"
+
+                               placeholder="Enter your phone number"
+
+                               required>
+
+                    </div>
+
+
+                    <!-- ================= ADDRESS ================= -->
+
+                    <div class="form-group">
+
+                        <label for="address">
+
+                            Delivery Address
+
+                        </label>
+
+
+                        <textarea
+
+                                id="address"
+
+                                name="address"
+
+                                placeholder="Enter your complete delivery address"
+
+                                required></textarea>
+
+                    </div>
+
+
+                    <!-- ================================================= -->
+                    <!-- PAYMENT METHOD -->
+                    <!-- ================================================= -->
+
+                    <div class="checkout-card"
+                         style="margin-top: 25px;">
+
+                        <h2>
+
+                            <i class="fa-solid fa-wallet"></i>
+
+                            Payment Method
+
+                        </h2>
+
+
+                        <div class="payment-options">
+
+
+                            <!-- ================= COD ================= -->
+
+                            <label class="payment-option">
+
+                                <input type="radio"
+
+                                       name="paymentMethod"
+
+                                       value="COD"
+
+                                       checked>
+
+                                <i class="fa-solid fa-money-bill-wave"></i>
+
+
+                                <div>
+
+                                    <strong>
+
+                                        Cash on Delivery
+
+                                    </strong>
+
+                                    <small>
+
+                                        Pay when your food is delivered
+
+                                    </small>
+
+                                </div>
+
+                            </label>
+
+
+                            <!-- ================= ONLINE ================= -->
+
+                            <label class="payment-option">
+
+                                <input type="radio"
+
+                                       name="paymentMethod"
+
+                                       value="ONLINE">
+
+                                <i class="fa-solid fa-credit-card"></i>
+
+
+                                <div>
+
+                                    <strong>
+
+                                        Online Payment
+
+                                    </strong>
+
+                                    <small>
+
+                                        Pay securely online
+
+                                    </small>
+
+                                </div>
+
+                            </label>
+
+
+                        </div>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- RIGHT SIDE -->
+        <!-- ================================================= -->
+
+        <div class="order-summary">
+
+
+            <h2>
+
+                <i class="fa-solid fa-receipt"
+                   style="color:#f97316;">
+                </i>
+
+                Order Summary
+
+            </h2>
+
+
+            <!-- ================= CART ITEMS ================= -->
+
+            <div th:each="item : ${cartItems}"
+                 class="summary-item">
+
+
+                <div>
+
+                    <div class="summary-item-name"
+                         th:text="${item.food.name}">
+
+                        Food Name
+
+                    </div>
+
+
+                    <div class="summary-item-quantity">
+
+                        Quantity:
+
+                        <span th:text="${item.quantity}">
+
+                            1
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-item-price">
+
+                    ₹<span th:text="${item.totalPrice}">
+
+                        0.00
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= SUMMARY ================= -->
+
+            <div class="summary-divider"></div>
+
+
+            <div class="summary-row">
+
+                <span>
+
+                    Items
+
+                </span>
+
+                <span th:text="${cartCount}">
+
+                    0
+
+                </span>
+
+            </div>
+
+
+            <div class="summary-total">
+
+                <span>
+
+                    Total
+
+                </span>
+
+
+                <strong>
+
+                    ₹<span th:text="${cartTotal}">
+
+                        0.00
+
+                    </span>
+
+                </strong>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- PLACE ORDER -->
+            <!-- ================================================= -->
+
+            <button type="submit"
+
+                    form="checkoutForm"
+
+                    class="place-order-btn">
+
+                <i class="fa-solid fa-check"></i>
+
+                Place Order
+
+            </button>
+
+
+            <!-- ================= BACK TO CART ================= -->
+
+            <a href="/cart"
+               class="back-cart">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Cart
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <a href="/" class="logo">
+
+                <span class="logo-icon">
+
+                    <i class="fa-solid fa-utensils"></i>
+
+                </span>
+
+                FoodHub
+
+            </a>
+
+
+            <p>
+
+                Delicious food delivered straight
+                to your doorstep.
+
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <h4>
+
+                Quick Links
+
+            </h4>
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/foods">
+                Food Menu
+            </a>
+
+            <a href="/cart">
+                Cart
+            </a>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <h4>
+
+                Account
+
+            </h4>
+
+            <a href="/login">
+                Login
+            </a>
+
+            <a href="/register">
+                Register
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <p>
+
+            © 2026 FoodHub. All Rights Reserved.
+
+        </p>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>
