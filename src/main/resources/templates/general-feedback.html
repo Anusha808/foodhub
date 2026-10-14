@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodHub Feedback</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fffaf5;
+            color: #292524;
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; }
+
+        .navbar {
+            background: #fff;
+            padding: 17px 7%;
+            min-height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            color: #ff6b00;
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .logo i { margin-right: 8px; }
+
+        .nav-link {
+            color: #ff6b00;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .page {
+            max-width: 720px;
+            margin: auto;
+            padding: 55px 20px 70px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .intro-icon {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: #fff1e6;
+            color: #ff6b00;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            margin: 0 auto 20px;
+        }
+
+        h1 {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        h1 span { color: #ff6b00; }
+
+        .intro p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .card {
+            background: #fff;
+            padding: 30px;
+            border: 1px solid #eee;
+            border-radius: 16px;
+            box-shadow: 0 8px 28px rgba(0,0,0,.05);
+        }
+
+        .message {
+            padding: 13px 15px;
+            border-radius: 9px;
+            font-size: 13px;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .success { background: #eaf8ef; color: #198754; }
+        .error { background: #ffe9e9; color: #c62828; }
+
+        .field-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .rating-options {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .rating-options input {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+        }
+
+        .rating-options label {
+            font-size: 36px;
+            color: #ddd;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .rating-options label:hover,
+        .rating-options label:hover ~ label,
+        .rating-options input:checked ~ label {
+            color: #ffb000;
+        }
+
+        .rating-options input:focus-visible + label {
+            outline: 2px solid #ff6b00;
+            outline-offset: 3px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 155px;
+            resize: vertical;
+            padding: 14px;
+            border: 1px solid #e5ddd5;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 13px;
+            line-height: 1.7;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        textarea:focus {
+            border-color: #ff6b00;
+            box-shadow: 0 0 0 3px rgba(255,107,0,.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: #ff6b00;
+            color: #fff;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .submit-btn:hover { background: #e85d00; }
+        .submit-btn i { margin-right: 8px; }
+
+        .history { margin-top: 28px; }
+
+        .history h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .feedback-item {
+            border-top: 1px solid #eee;
+            padding: 17px 0;
+        }
+
+        .stars {
+            color: #ffb000;
+            margin-bottom: 8px;
+        }
+
+        .feedback-item p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .feedback-date {
+            color: #999;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 22px;
+            color: #666;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .back-link:hover { color: #ff6b00; }
+
+        @media (max-width: 500px) {
+            .navbar { padding: 15px 20px; }
+            h1 { font-size: 25px; }
+            .card { padding: 21px; }
+            .rating-options label { font-size: 31px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+    <a th:href="@{/}" class="logo">
+        <i class="fa-solid fa-utensils"></i>FoodHub
+    </a>
+
+    <a th:href="@{/orders}" class="nav-link">
+        <i class="fa-solid fa-arrow-left"></i> My Orders
+    </a>
+</header>
+
+<main class="page">
+
+    <div class="intro">
+        <div class="intro-icon">
+            <i class="fa-regular fa-comments"></i>
+        </div>
+
+        <h1>FoodHub <span>Feedback</span></h1>
+
+        <p>
+            Help us improve FoodHub. Share your thoughts about our website,
+            ordering process, and overall service.
+        </p>
+    </div>
+
+    <section class="card">
+
+        <div th:if="${successMessage}" class="message success"
+             th:text="${successMessage}"></div>
+
+        <div th:if="${errorMessage}" class="message error"
+             th:text="${errorMessage}"></div>
+
+        <form th:action="@{/feedback/general/submit}" method="post">
+
+            <label class="field-label">How would you rate FoodHub?</label>
+
+            <div class="rating-options">
+                <input type="radio" id="generalStar5" name="rating" value="5" required>
+                <label for="generalStar5" title="Excellent">★</label>
+
+                <input type="radio" id="generalStar4" name="rating" value="4">
+                <label for="generalStar4" title="Very Good">★</label>
+
+                <input type="radio" id="generalStar3" name="rating" value="3">
+                <label for="generalStar3" title="Good">★</label>
+
+                <input type="radio" id="generalStar2" name="rating" value="2">
+                <label for="generalStar2" title="Fair">★</label>
+
+                <input type="radio" id="generalStar1" name="rating" value="1">
+                <label for="generalStar1" title="Poor">★</label>
+            </div>
+
+            <label for="comment" class="field-label">
+                Your Feedback
+            </label>
+
+            <textarea id="comment"
+                      name="comment"
+                      maxlength="1000"
+                      required
+                      placeholder="What do you like about FoodHub? What can we improve?"></textarea>
+
+            <button type="submit" class="submit-btn">
+                <i class="fa-solid fa-paper-plane"></i>
+                Submit FoodHub Feedback
+            </button>
+        </form>
+
+        <div class="history" th:if="${!#lists.isEmpty(feedbackList)}">
+            <h2>Your Previous FoodHub Feedback</h2>
+
+            <div class="feedback-item" th:each="feedback : ${feedbackList}">
+                <div class="stars">
+                    <span th:each="i : ${#numbers.sequence(1, feedback.rating)}">★</span>
+                </div>
+
+                <p th:text="${feedback.comment}">Your feedback</p>
+
+                <div class="feedback-date"
+                     th:text="${#temporals.format(feedback.createdAt, 'dd MMM yyyy, hh:mm a')}">
+                    14 Oct 2026
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <a th:href="@{/orders}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i> Back to My Orders
+    </a>
+
+</main>
+</body>
+</html>

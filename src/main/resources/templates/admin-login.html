@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login - FoodHub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/admin-login.css}">
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <!-- LEFT PANEL -->
+    <section class="welcome-panel">
+
+        <a th:href="@{/}" class="brand">
+            <span class="brand-icon">
+                <i class="fa-solid fa-utensils"></i>
+            </span>
+            <span>Food<span class="brand-highlight">Hub</span></span>
+        </a>
+
+        <div class="welcome-content">
+
+            <span class="welcome-label">
+                <i class="fa-solid fa-shield-halved"></i>
+                ADMINISTRATION PORTAL
+            </span>
+
+            <h1>
+                Welcome to your
+                <span>Admin Dashboard.</span>
+            </h1>
+
+            <p>
+                Manage food items, categories, customer orders,
+                users and the FoodHub ordering process from one place.
+            </p>
+
+            <div class="feature-list">
+
+                <div class="feature-item">
+                    <span class="feature-icon">
+                        <i class="fa-solid fa-utensils"></i>
+                    </span>
+                    <div>
+                        <strong>Food Management</strong>
+                        <p>Add, update and manage food items.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">
+                        <i class="fa-solid fa-receipt"></i>
+                    </span>
+                    <div>
+                        <strong>Order Management</strong>
+                        <p>Review orders and update their status.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </span>
+                    <div>
+                        <strong>Customer Management</strong>
+                        <p>Access customer and account information.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <i class="fa-solid fa-lock"></i>
+            Authorized administrators only
+        </div>
+
+    </section>
+
+    <!-- RIGHT PANEL -->
+    <main class="login-panel">
+
+        <div class="login-card">
+
+            <a th:href="@{/}" class="mobile-brand">
+                <i class="fa-solid fa-utensils"></i>
+                FoodHub
+            </a>
+
+            <div class="admin-avatar">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+
+            <span class="eyebrow">ADMIN ACCESS</span>
+
+            <h2>Admin Login</h2>
+
+            <p class="login-description">
+                Enter your administrator credentials to continue.
+            </p>
+
+            <!-- SUCCESS MESSAGE -->
+            <div class="message success-message"
+                 th:if="${param.logout != null}">
+                <i class="fa-solid fa-circle-check"></i>
+                You have been logged out successfully.
+            </div>
+
+            <!-- ERROR MESSAGE -->
+            <div class="message error-message"
+                 th:if="${error != null}">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span th:text="${error}">Invalid email or password.</span>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <form th:action="@{/admin/login}" method="post">
+
+                <div class="form-group">
+
+                    <label for="email">Admin Email</label>
+
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-envelope input-icon"></i>
+
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               placeholder="Enter admin email"
+                               autocomplete="username"
+                               required>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="password">Password</label>
+
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               placeholder="Enter your password"
+                               autocomplete="current-password"
+                               required>
+
+                        <button type="button"
+                                class="password-toggle"
+                                id="togglePassword"
+                                aria-label="Show password">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="form-options">
+                    <span>
+                        <i class="fa-solid fa-shield-halved"></i>
+                        Secure administrator access
+                    </span>
+                </div>
+
+                <button type="submit" class="login-button">
+                    <span>Sign In to Dashboard</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+            </form>
+
+            <div class="divider">
+                <span></span>
+                <small>FOODHUB ADMINISTRATION</small>
+                <span></span>
+            </div>
+
+            <a th:href="@{/}" class="back-home">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to FoodHub Home
+            </a>
+
+            <p class="security-note">
+                <i class="fa-solid fa-lock"></i>
+                Your administrator account is protected.
+            </p>
+
+        </div>
+
+        <footer class="login-footer">
+            © 2026 FoodHub. All rights reserved.
+        </footer>
+
+    </main>
+
+</div>
+
+<script>
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+
+    togglePassword.addEventListener("click", function () {
+        const isPassword = passwordInput.type === "password";
+
+        passwordInput.type = isPassword ? "text" : "password";
+
+        togglePassword.innerHTML = isPassword
+            ? '<i class="fa-regular fa-eye-slash"></i>'
+            : '<i class="fa-regular fa-eye"></i>';
+
+        togglePassword.setAttribute(
+            "aria-label",
+            isPassword ? "Hide password" : "Show password"
+        );
+    });
+</script>
+
+</body>
+</html>

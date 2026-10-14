@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Secure Payment | FoodHub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: #fffaf5;
+            color: #292524;
+        }
+
+        .payment-card {
+            width: 100%;
+            max-width: 460px;
+            padding: 38px 30px;
+            text-align: center;
+            background: #ffffff;
+            border: 1px solid #f0e7df;
+            border-radius: 20px;
+            box-shadow: 0 15px 45px rgba(41, 37, 36, 0.08);
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+            color: #292524;
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #ff6b00;
+            color: #ffffff;
+        }
+
+        .payment-icon {
+            width: 76px;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 22px;
+            border-radius: 50%;
+            background: #fff0e5;
+            color: #ff6b00;
+            font-size: 32px;
+        }
+
+        h1 {
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            color: #78716c;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .amount-box {
+            padding: 20px;
+            margin-bottom: 22px;
+            border: 1px solid #f0e7df;
+            border-radius: 12px;
+            background: #fffaf5;
+        }
+
+        .amount-label {
+            color: #78716c;
+            font-size: 13px;
+        }
+
+        .amount {
+            margin-top: 8px;
+            color: #ff6b00;
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .customer {
+            margin-bottom: 24px;
+            color: #57534e;
+            font-size: 14px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .pay-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #ff6b00;
+            color: white;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .pay-button:hover {
+            background: #e85d00;
+        }
+
+        .cancel-link {
+            display: inline-block;
+            margin-top: 18px;
+            color: #78716c;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .cancel-link:hover {
+            color: #ff6b00;
+        }
+
+        .secure-note {
+            margin-top: 24px;
+            color: #78716c;
+            font-size: 12px;
+        }
+
+        .secure-note i {
+            color: #16a34a;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="payment-card">
+
+    <div class="logo">
+        <span class="logo-icon">
+            <i class="fa-solid fa-utensils"></i>
+        </span>
+        FoodHub
+    </div>
+
+    <div class="payment-icon">
+        <i class="fa-solid fa-credit-card"></i>
+    </div>
+
+    <h1>Complete Your Payment</h1>
+
+    <p class="description">
+        You're one step away from enjoying your food.
+        Continue securely to Razorpay to complete your payment.
+    </p>
+
+    <div class="amount-box">
+        <div class="amount-label">Amount to Pay</div>
+
+        <div class="amount">
+            ₹<span th:text="${#numbers.formatDecimal(
+                    amountPaise / 100.0, 1, 2)}">0.00</span>
+        </div>
+    </div>
+
+    <div class="customer">
+        <div>
+            <i class="fa-regular fa-user"></i>
+            <span th:text="${customerName}">Customer</span>
+        </div>
+
+        <div>
+            <i class="fa-regular fa-envelope"></i>
+            <span th:text="${customerEmail}">Email</span>
+        </div>
+    </div>
+
+    <button type="button" id="payButton" class="pay-button">
+        <i class="fa-solid fa-lock"></i>
+        Pay Securely with Razorpay
+    </button>
+
+    <a href="/checkout/payment-cancelled" class="cancel-link">
+        Cancel and return to checkout
+    </a>
+
+    <p class="secure-note">
+        <i class="fa-solid fa-shield-halved"></i>
+        Secure payment powered by Razorpay
+    </p>
+
+</div>
+
+<script th:inline="javascript">
+    const razorpayKeyId = /*[[${razorpayKeyId}]]*/ "";
+    const razorpayOrderId = /*[[${razorpayOrderId}]]*/ "";
+    const amountPaise = /*[[${amountPaise}]]*/ 0;
+    const customerName = /*[[${customerName}]]*/ "";
+    const customerEmail = /*[[${customerEmail}]]*/ "";
+    const customerPhone = /*[[${customerPhone}]]*/ "";
+
+    const payButton = document.getElementById("payButton");
+    let paymentWindowOpened = false;
+
+    payButton.addEventListener("click", function () {
+        if (paymentWindowOpened) {
+            return;
+        }
+
+        if (typeof Razorpay === "undefined") {
+            alert("Razorpay could not load. Check your internet connection.");
+            return;
+        }
+
+        const options = {
+            key: razorpayKeyId,
+            amount: amountPaise,
+            currency: "INR",
+            name: "FoodHub",
+            description: "FoodHub food order",
+            order_id: razorpayOrderId,
+
+            prefill: {
+                name: customerName,
+                email: customerEmail,
+                contact: customerPhone
+            },
+
+            theme: {
+                color: "#ff6b00"
+            },
+
+            handler: function (response) {
+                // Submit Razorpay's returned fields to the server.
+                // The server verifies the signature before saving the order.
+                const form = document.createElement("form");
+                form.method = "POST";
+                form.action = "/checkout/payment-success";
+
+                const fields = {
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                };
+
+                Object.entries(fields).forEach(function ([name, value]) {
+                    const input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = name;
+                    input.value = value;
+                    form.appendChild(input);
+                });
+
+                document.body.appendChild(form);
+                form.submit();
+            },
+
+            modal: {
+                ondismiss: function () {
+                    window.location.href = "/checkout/payment-cancelled";
+                }
+            }
+        };
+
+        const razorpay = new Razorpay(options);
+
+        razorpay.on("payment.failed", function (response) {
+            const message =
+                response.error && response.error.description
+                    ? response.error.description
+                    : "Payment could not be completed.";
+
+            alert(message);
+        });
+
+        paymentWindowOpened = true;
+        payButton.disabled = true;
+        payButton.textContent = "Opening Razorpay...";
+
+        try {
+            razorpay.open();
+        } catch (error) {
+            paymentWindowOpened = false;
+            payButton.disabled = false;
+            payButton.innerHTML =
+                '<i class="fa-solid fa-lock"></i> Pay Securely with Razorpay';
+
+            alert("Unable to open Razorpay. Please try again.");
+        }
+    });
+</script>
+
+</body>
+</html>

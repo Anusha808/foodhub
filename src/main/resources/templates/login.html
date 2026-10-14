@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -7,370 +8,403 @@
 
     <title>Login | FoodHub</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Authentication CSS -->
     <link rel="stylesheet" th:href="@{/css/auth.css}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
 
-<div class="auth-container">
+    <!-- Background Effects -->
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <div class="ambient ambient-three"></div>
 
-    <!-- ================= LEFT SIDE ================= -->
+    <div class="floating-particle particle-one"></div>
+    <div class="floating-particle particle-two"></div>
+    <div class="floating-particle particle-three"></div>
+    <div class="floating-particle particle-four"></div>
 
-    <div class="auth-left">
+    <main class="auth-container">
 
-        <div class="brand">
-            <span class="brand-icon">🍴</span>
-            <span>FoodHub</span>
-        </div>
+        <!-- LEFT BRANDING PANEL -->
+        <section class="auth-left">
 
-        <div class="left-content">
+            <a href="/" class="brand">
+                <span class="brand-icon">
+                    <i class="fa-solid fa-utensils"></i>
+                </span>
 
-            <h1>Welcome Back!</h1>
+                <span>
+                    Food<span class="brand-highlight">Hub</span>
+                </span>
 
-            <p>
-                Login to FoodHub and continue ordering
-                your favorite food from the comfort of your home.
-            </p>
+                <span class="brand-dot"></span>
+            </a>
 
-            <div class="benefits">
+            <div class="hero-content">
 
-                <!-- Benefit 1 -->
+                <div class="eyebrow">
+                    <span class="status-dot"></span>
+                    YOUR DAILY DOSE OF DELICIOUS
+                </div>
 
-                <div class="benefit">
+                <h1>
+                    Good food.<br>
+                    <span class="gradient-text">Great mood.</span>
+                </h1>
 
-                    <span>🍕</span>
+                <p class="hero-description">
+                    Cravings don't wait, and neither should you.
+                    Sign in to discover delicious meals and get
+                    your favorites delivered to your door.
+                </p>
 
-                    <div>
-                        <h3>Delicious Food</h3>
-                        <p>Explore your favorite dishes.</p>
+                <div class="feature-list">
+
+                    <div class="feature-item">
+                        <span class="feature-icon">
+                            <i class="fa-solid fa-bowl-food"></i>
+                        </span>
+
+                        <div>
+                            <h3>Made to satisfy</h3>
+                            <p>Explore meals for every craving.</p>
+                        </div>
+
+                        <i class="fa-solid fa-arrow-up-right-from-square feature-arrow"></i>
+                    </div>
+
+                    <div class="feature-item">
+                        <span class="feature-icon">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </span>
+
+                        <div>
+                            <h3>At your doorstep</h3>
+                            <p>Order your favorites with ease.</p>
+                        </div>
+
+                        <i class="fa-solid fa-arrow-up-right-from-square feature-arrow"></i>
+                    </div>
+
+                    <div class="feature-item">
+                        <span class="feature-icon">
+                            <i class="fa-solid fa-heart"></i>
+                        </span>
+
+                        <div>
+                            <h3>Made for you</h3>
+                            <p>Your food journey, your way.</p>
+                        </div>
+
+                        <i class="fa-solid fa-arrow-up-right-from-square feature-arrow"></i>
                     </div>
 
                 </div>
 
-
-                <!-- Benefit 2 -->
-
-                <div class="benefit">
-
-                    <span>🚀</span>
-
-                    <div>
-                        <h3>Fast Delivery</h3>
-                        <p>Get your food delivered quickly.</p>
-                    </div>
-
-                </div>
-
-
-                <!-- Benefit 3 -->
-
-                <div class="benefit">
-
-                    <span>🔒</span>
-
-                    <div>
-                        <h3>Secure Account</h3>
-                        <p>Your account information is protected.</p>
-                    </div>
-
+                <div class="bottom-note">
+                    <span class="note-line"></span>
+                    <span>GOOD FOOD BRINGS PEOPLE TOGETHER.</span>
                 </div>
 
             </div>
 
-        </div>
+            <div class="left-decoration decoration-one"></div>
+            <div class="left-decoration decoration-two"></div>
 
-    </div>
+        </section>
 
-
-    <!-- ================= RIGHT SIDE ================= -->
-
-    <div class="auth-right">
-
-        <div class="auth-card">
+        <!-- RIGHT LOGIN PANEL -->
+        <section class="auth-right">
 
             <!-- Mobile Brand -->
-
             <div class="mobile-brand">
-                🍴 FoodHub
+                <span class="brand-icon">
+                    <i class="fa-solid fa-utensils"></i>
+                </span>
+
+                <span>
+                    Food<span class="brand-highlight">Hub</span>
+                </span>
             </div>
 
+            <div class="auth-card">
 
-            <!-- Heading -->
+                <div class="card-topline">
+                    <span class="card-label">YOUR ACCOUNT</span>
 
-            <h2>Login</h2>
-
-            <p class="auth-subtitle">
-                Sign in to your FoodHub account
-            </p>
-
-
-            <!-- ================= LOGIN FORM ================= -->
-
-            <!-- IMPORTANT:
-                 No action="/login"
-                 No method="post"
-
-                 JavaScript will send the request as JSON.
-            -->
-
-            <form id="loginForm">
-
-                <!-- Email -->
-
-                <div class="form-group">
-
-                    <label for="email">
-                        Email Address
-                    </label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        autocomplete="email"
-                        required>
-
+                    <span class="secure-label">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        Secure sign in
+                    </span>
                 </div>
 
-
-                <!-- Password -->
-
-                <div class="form-group">
-
-                    <label for="password">
-                        Password
-                    </label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                        required>
-
+                <div class="welcome-icon">
+                    <i class="fa-solid fa-hand"></i>
+                    <span class="welcome-sparkle">✦</span>
                 </div>
 
+                <h2>
+                    Welcome back<span class="orange-period">.</span>
+                </h2>
 
-                <!-- Login Button -->
+                <p class="auth-subtitle">
+                    We're happy to have you here again.
+                </p>
 
-                <button
-                    type="submit"
-                    class="auth-button"
-                    id="loginButton">
+                <!-- Registration Success Message -->
+                <div th:if="${param.registered}"
+                     class="message success"
+                     role="status">
+                    Registration successful! Please log in.
+                </div>
 
-                    Login
+                <!-- Login Error Message -->
+                <div th:if="${error}"
+                     class="message error"
+                     role="alert"
+                     th:text="${error}">
+                </div>
 
-                </button>
+                <!-- Login Form -->
+                <form th:action="@{/login}"
+                      method="post"
+                      id="loginForm">
 
-            </form>
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email address</label>
 
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-envelope input-icon"></i>
 
-            <!-- ================= MESSAGE ================= -->
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                required>
 
-            <p
-                id="loginMessage"
-                class="message">
-            </p>
+                            <i class="fa-solid fa-check input-check"></i>
+                        </div>
+                    </div>
 
+                    <!-- Password -->
+                    <div class="form-group">
 
-            <!-- ================= REGISTER LINK ================= -->
+                        <div class="label-row">
+                            <label for="password">Password</label>
+                        </div>
 
-            <div class="auth-footer">
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock input-icon"></i>
 
-                <p>
-                    Don't have an account?
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required>
 
-                    <a href="/register">
-                        Create an account
-                    </a>
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="togglePassword"
+                                aria-label="Show password">
+
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Login Options -->
+                    <div class="form-options">
+
+                        <span class="login-tip">
+                            <i class="fa-solid fa-circle-info"></i>
+                            Keep your password private.
+                        </span>
+
+                        <a href="/forgot-password"
+                           class="forgot-password">
+                            Forgot password?
+                        </a>
+
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                            class="auth-button"
+                            id="loginButton">
+
+                        <span class="button-text">Sign in to FoodHub</span>
+
+                        <i class="fa-solid fa-arrow-right button-arrow"></i>
+
+                        <span class="button-loader"></span>
+                    </button>
+
+                </form>
+
+                <!-- Login Status -->
+                <div id="loginMessage"
+                     class="message"
+                     role="status"
+                     aria-live="polite">
+                </div>
+
+                <!-- Register Link -->
+                <div class="divider">
+                    <span></span>
+                    <p>NEW TO FOODHUB?</p>
+                    <span></span>
+                </div>
+
+                <a href="/register" class="register-button">
+                    Create your account
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+
+                <!-- Privacy Note -->
+                <p class="privacy-note">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Your information is handled securely.
                 </p>
 
             </div>
 
-        </div>
+            <!-- Footer -->
+            <div class="right-footer">
+                <span>© <span id="currentYear"></span> FoodHub</span>
+                <span class="footer-separator">•</span>
+                <span>
+                    MADE FOR YOUR CRAVINGS
+                    <span class="footer-heart">♥</span>
+                </span>
+            </div>
 
-    </div>
+        </section>
 
-</div>
+    </main>
 
+    <!-- Login Page JavaScript -->
+    <script>
+        const loginForm = document.getElementById("loginForm");
+        const loginButton = document.getElementById("loginButton");
+        const loginMessage = document.getElementById("loginMessage");
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
 
-<!-- ================= LOGIN JAVASCRIPT ================= -->
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
 
-<script>
+        // Show or hide password
+        togglePassword.addEventListener("click", function () {
+            const isPassword = passwordInput.type === "password";
 
-document
-    .getElementById("loginForm")
-    .addEventListener("submit", async function(event) {
+            passwordInput.type = isPassword ? "text" : "password";
 
-        /*
-         * Prevent normal HTML form submission.
-         *
-         * This is important because normal form submission
-         * sends application/x-www-form-urlencoded data.
-         *
-         * Our Spring Boot API expects JSON.
-         */
+            togglePassword.innerHTML = isPassword
+                ? '<i class="fa-regular fa-eye-slash"></i>'
+                : '<i class="fa-regular fa-eye"></i>';
 
-        event.preventDefault();
+            togglePassword.setAttribute(
+                "aria-label",
+                isPassword ? "Hide password" : "Show password"
+            );
+        });
 
+        // Clear old messages when the user edits the form
+        loginForm.addEventListener("input", function () {
+            loginMessage.textContent = "";
+            loginMessage.className = "message";
+        });
 
-        // Get email
+        // Submit the normal HTML form to Spring Boot
+        loginForm.addEventListener("submit", function (event) {
+            event.preventDefault();
 
-        const email =
-            document.getElementById("email").value.trim();
-
-
-        // Get password
-
-        const password =
-            document.getElementById("password").value;
-
-
-        // Message element
-
-        const message =
-            document.getElementById("loginMessage");
-
-
-        // Login button
-
-        const loginButton =
-            document.getElementById("loginButton");
-
-
-        // Clear previous message
-
-        message.textContent = "";
-
-        message.className = "message";
-
-
-        // Disable button while request is running
-
-        loginButton.disabled = true;
-
-        loginButton.textContent = "Logging in...";
-
-
-        try {
-
-            /*
-             * Send JSON request to Spring Boot
-             */
-
-            const response = await fetch("/login", {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-
-                    email: email,
-
-                    password: password
-
-                })
-
-            });
-
-
-            /*
-             * Read backend response
-             */
-
-            const result =
-                await response.text();
-
-
-            /*
-             * Login successful
-             */
-
-            if (result === "Login successful!") {
-
-                message.textContent =
-                    "Login successful!";
-
-                message.className =
-                    "message success";
-
-
-                /*
-                 * Redirect to FoodHub home page
-                 * after 1 second.
-                 */
-
-                setTimeout(function() {
-
-                    window.location.href = "/";
-
-                }, 1000);
-
+            if (!loginForm.checkValidity()) {
+                loginForm.reportValidity();
+                return;
             }
 
+            loginButton.disabled = true;
+            loginButton.classList.add("loading");
+            loginButton.querySelector(".button-text").textContent =
+                "Signing in...";
 
-            /*
-             * Login failed
-             */
-
-            else {
-
-                message.textContent =
-                    result;
-
-                message.className =
-                    "message error";
-
-
-                // Enable button again
-
-                loginButton.disabled = false;
-
-                loginButton.textContent =
-                    "Login";
-
-            }
-
-        }
-
-
-        /*
-         * Server/network error
-         */
-
-        catch (error) {
-
-            console.error(
-                "Login error:",
-                error
+            // Submit as application/x-www-form-urlencoded.
+            // This matches @ModelAttribute in HomeController.
+            const formData = new URLSearchParams(
+                new FormData(loginForm)
             );
 
+            fetch(loginForm.action, {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded;charset=UTF-8"
+                },
+                body: formData.toString()
+            })
+            .then(async function (response) {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
 
-            message.textContent =
-                "Unable to connect to the server.";
+                const contentType =
+                    response.headers.get("content-type") || "";
 
-            message.className =
-                "message error";
+                // If Spring returns a page, display that page.
+                if (contentType.includes("text/html")) {
+                    const html = await response.text();
+                    document.open();
+                    document.write(html);
+                    document.close();
+                    return;
+                }
 
+                if (!response.ok) {
+                    throw new Error(
+                        "Login failed. Please try again."
+                    );
+                }
 
-            // Enable button again
+                // With the updated controller, successful login redirects.
+                throw new Error(
+                    "Unexpected login response. Please try again."
+                );
+            })
+            .catch(function (error) {
+                console.error("Login error:", error);
 
-            loginButton.disabled = false;
+                loginMessage.textContent =
+                    error.message ||
+                    "Unable to connect to the server. Please try again.";
 
-            loginButton.textContent =
-                "Login";
+                loginMessage.className = "message error";
 
-        }
-
-    });
-
-</script>
+                loginButton.disabled = false;
+                loginButton.classList.remove("loading");
+                loginButton.querySelector(".button-text").textContent =
+                    "Sign in to FoodHub";
+            });
+        });
+    </script>
 
 </body>
-
 </html>

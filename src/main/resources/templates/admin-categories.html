@@ -1,0 +1,1177 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FoodHub | Category Management</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --orange: #ff6b35;
+            --orange-dark: #ed5421;
+            --dark: #202820;
+            --dark-soft: #2b352c;
+            --cream: #f8f5ef;
+            --white: #ffffff;
+            --text: #292f29;
+            --muted: #85877f;
+            --border: #eae5db;
+            --green: #497858;
+            --red: #dc4646;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button, input {
+            font: inherit;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 235px;
+            padding: 30px 17px 20px;
+            background: var(--dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px;
+            margin-bottom: 44px;
+            color: white;
+        }
+
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: var(--orange);
+            font-size: 21px;
+            flex-shrink: 0;
+        }
+
+        .brand-name {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .brand-name span {
+            color: var(--orange);
+        }
+
+        .brand-subtitle {
+            color: #a7b0a5;
+            font-size: 9px;
+            margin-top: 4px;
+            white-space: nowrap;
+        }
+
+        .nav-label {
+            color: #879187;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            padding: 0 14px;
+            margin-bottom: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 13px 14px;
+            border-radius: 11px;
+            color: #c4ccc2;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .nav-links a i {
+            width: 19px;
+            text-align: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            background: var(--dark-soft);
+        }
+
+        .nav-links a.active {
+            border-left: 3px solid var(--orange);
+            padding-left: 11px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 25px;
+        }
+
+        .sidebar-note {
+            background: #303c31;
+            border-radius: 13px;
+            padding: 17px;
+            margin: 0 5px 20px;
+        }
+
+        .sidebar-note i {
+            color: #f5ad66;
+            font-size: 19px;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-note h4 {
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .sidebar-note p {
+            color: #b6c0b4;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .logout-link {
+            display: flex;
+            gap: 13px;
+            align-items: center;
+            padding: 15px 14px;
+            color: #f1b0a0;
+            border-top: 1px solid #3b443b;
+            font-size: 13px;
+        }
+
+        .logout-link:hover {
+            color: white;
+        }
+
+        /* MAIN LAYOUT */
+
+        .main {
+            margin-left: 235px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            min-height: 77px;
+            background: rgba(255,255,255,0.9);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 38px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .breadcrumb {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .breadcrumb strong {
+            color: var(--text);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 17px;
+            border-left: 1px solid var(--border);
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #f9dfce;
+            color: #bd572b;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .profile-name {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .profile-role {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .menu-toggle {
+            display: none;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 21px;
+            cursor: pointer;
+        }
+
+        .content {
+            max-width: 1600px;
+            margin: auto;
+            padding: 31px 38px;
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--orange-dark);
+            text-transform: uppercase;
+            letter-spacing: 1.7px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 13px;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 24px;
+            height: 2px;
+            background: var(--orange);
+        }
+
+        .page-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 31px;
+            letter-spacing: -0.6px;
+            margin-bottom: 9px;
+        }
+
+        .intro {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* SUMMARY CARDS */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin: 27px 0;
+        }
+
+        .summary-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .summary-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .icon-orange {
+            color: #dc652d;
+            background: #fff0e5;
+        }
+
+        .icon-green {
+            color: #477c59;
+            background: #e9f4e9;
+        }
+
+        .icon-blue {
+            color: #5375a5;
+            background: #eaf0fa;
+        }
+
+        .summary-card p {
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .summary-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        /* ALERT MESSAGES */
+
+        .message {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            border-radius: 11px;
+            margin: 18px 0;
+            font-size: 13px;
+        }
+
+        .success {
+            background: #e7f4e8;
+            color: #39744a;
+            border: 1px solid #cfe7d2;
+        }
+
+        .error {
+            background: #fff0ed;
+            color: #bb3838;
+            border: 1px solid #f4d0c9;
+        }
+
+        /* PANELS */
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 24px;
+            min-width: 0;
+        }
+
+        .panel-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .panel-heading h3 {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        .panel-heading p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .panel-heading > i {
+            color: var(--orange);
+            font-size: 21px;
+        }
+
+        /* ADD CATEGORY FORM */
+
+        .add-form {
+            display: flex;
+            align-items: stretch;
+            gap: 12px;
+        }
+
+        .input-group {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 9px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #fffefa;
+            color: var(--text);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+        }
+
+        .input-group input::placeholder {
+            color: #aaa99f;
+        }
+
+        .add-btn {
+            align-self: flex-end;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 20px;
+            border: none;
+            border-radius: 9px;
+            background: var(--orange);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .add-btn:hover {
+            background: var(--orange-dark);
+            transform: translateY(-1px);
+        }
+
+        .form-hint {
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        /* TABLE */
+
+        .table-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .table-heading h3 {
+            font-size: 16px;
+        }
+
+        .count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 31px;
+            height: 29px;
+            padding: 0 10px;
+            border-radius: 20px;
+            background: #fff0e5;
+            color: var(--orange-dark);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        thead th {
+            padding: 15px 14px;
+            background: #faf7f1;
+            color: #77796f;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-align: left;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody td {
+            padding: 16px 14px;
+            border-bottom: 1px solid #f0eee8;
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #fffdf9;
+        }
+
+        .category-id {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .category-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-avatar {
+            width: 39px;
+            height: 39px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            background: #fff0e5;
+            color: var(--orange-dark);
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .category-name {
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .category-subtitle {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .category-label {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #e9f4e9;
+            color: #477c59;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .edit-btn {
+            background: #fff0e5;
+            color: var(--orange-dark);
+        }
+
+        .edit-btn:hover {
+            background: #ffe1ce;
+        }
+
+        .delete-btn {
+            background: #fff0ed;
+            color: #c63e3e;
+        }
+
+        .delete-btn:hover {
+            background: #ffded8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            white-space: normal;
+        }
+
+        .empty-icon {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 17px;
+            display: grid;
+            place-items: center;
+            background: #fff0e5;
+            color: var(--orange);
+            border-radius: 18px;
+            font-size: 25px;
+        }
+
+        .empty-state h4 {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 23px 10px;
+            margin-top: 30px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* RESPONSIVE */
+
+        .sidebar-overlay {
+            display: none;
+        }
+
+        @media (max-width: 1200px) {
+            .content {
+                padding: 28px 25px;
+            }
+
+            .topbar {
+                padding: 15px 25px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .summary-card:last-child {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 750px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay.open {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(20,27,20,0.45);
+                z-index: 90;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .topbar {
+                padding: 15px 18px;
+                flex-wrap: wrap;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .breadcrumb {
+                margin-right: auto;
+            }
+
+            .content {
+                padding: 24px 17px;
+            }
+
+            .page-heading {
+                font-size: 27px;
+            }
+
+            .add-form {
+                flex-direction: column;
+            }
+
+            .add-btn {
+                align-self: stretch;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card:last-child {
+                grid-column: auto;
+            }
+
+            .profile {
+                padding-left: 10px;
+            }
+
+            .profile-name {
+                max-width: 95px;
+                overflow-wrap: anywhere;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            .eyebrow {
+                font-size: 9px;
+                letter-spacing: 1px;
+            }
+
+            .page-heading {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <a th:href="@{/admin/dashboard}" class="brand">
+        <div class="brand-icon">
+            <i class="fa-solid fa-utensils"></i>
+        </div>
+
+        <div>
+            <div class="brand-name">Food<span>Hub</span></div>
+            <div class="brand-subtitle">RESTAURANT CONTROL CENTER</div>
+        </div>
+    </a>
+
+    <div class="nav-label">WORKSPACE</div>
+
+    <nav class="nav-links">
+
+        <a th:href="@{/admin/dashboard}">
+            <i class="fa-solid fa-chart-pie"></i>
+            Dashboard
+        </a>
+
+        <a th:href="@{/admin/foods}">
+            <i class="fa-solid fa-burger"></i>
+            Food Catalogue
+        </a>
+
+        <a th:href="@{/admin/categories}" class="active">
+            <i class="fa-solid fa-layer-group"></i>
+            Categories
+        </a>
+
+        <a th:href="@{/admin/orders}">
+            <i class="fa-solid fa-receipt"></i>
+            Order Management
+        </a>
+
+        <a th:href="@{/admin/users}">
+            <i class="fa-solid fa-user-group"></i>
+            Customers
+        </a>
+
+        <!-- ADDED CUSTOMER FEEDBACK LINK -->
+        <a th:href="@{/admin/feedback}">
+            <i class="fa-solid fa-comments"></i>
+            Customer Feedback
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="sidebar-note">
+            <i class="fa-solid fa-lightbulb"></i>
+            <h4>Keep your menu fresh!</h4>
+            <p>
+                Organize your food categories to help customers
+                discover their favourite dishes.
+            </p>
+        </div>
+
+        <a th:href="@{/admin/logout}" class="logout-link">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            Sign out
+        </a>
+
+    </div>
+</aside>
+
+<div class="sidebar-overlay"
+     id="sidebarOverlay"
+     onclick="toggleSidebar()"></div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+    <header class="topbar">
+
+        <button class="menu-toggle"
+                type="button"
+                onclick="toggleSidebar()"
+                aria-label="Open navigation">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="breadcrumb">
+            FoodHub <span style="padding:0 8px;">/</span>
+            <strong>Categories</strong>
+        </div>
+
+        <div class="topbar-right">
+            <div class="profile">
+                <div class="avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div>
+                    <div class="profile-name"
+                         th:text="${adminName} ?: 'FoodHub Admin'">
+                        FoodHub Admin
+                    </div>
+                    <div class="profile-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <main class="content">
+
+        <div class="eyebrow">MENU ORGANIZATION</div>
+
+        <h1 class="page-heading">Category Management</h1>
+
+        <p class="intro">
+            Organize your restaurant menu by creating and managing
+            categories for your food items.
+        </p>
+
+        <!-- FEEDBACK MESSAGES -->
+        <div th:if="${successMessage}" class="message success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span th:text="${successMessage}"></span>
+        </div>
+
+        <div th:if="${errorMessage}" class="message error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <section class="summary-grid">
+
+            <div class="summary-card">
+                <div class="summary-icon icon-orange">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div>
+                    <p>Total Categories</p>
+                    <h3 th:text="${#lists.size(categories)}">0</h3>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon icon-green">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <p>Menu Organization</p>
+                    <h3>Active</h3>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon icon-blue">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <p>Management Tools</p>
+                    <h3>3</h3>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ADD CATEGORY -->
+        <section class="panel">
+
+            <div class="panel-heading">
+                <div>
+                    <h3>Add a New Category</h3>
+                    <p>
+                        Create categories such as Pizza, Burgers,
+                        Indian Food, Desserts, or Beverages.
+                    </p>
+                </div>
+
+                <i class="fa-solid fa-folder-plus"></i>
+            </div>
+
+            <form class="add-form"
+                  th:action="@{/admin/categories/add}"
+                  method="post">
+
+                <div class="input-group">
+                    <label for="categoryName">Category Name</label>
+
+                    <input type="text"
+                           id="categoryName"
+                           name="name"
+                           placeholder="Enter a category name"
+                           maxlength="100"
+                           required>
+                </div>
+
+                <button type="submit" class="add-btn">
+                    <i class="fa-solid fa-plus"></i>
+                    Add Category
+                </button>
+
+            </form>
+
+            <p class="form-hint">
+                <i class="fa-solid fa-circle-info"></i>
+                Category names must be unique. Existing food items
+                may already use some categories.
+            </p>
+
+        </section>
+
+        <!-- ALL CATEGORIES -->
+        <section class="panel">
+
+            <div class="table-heading">
+                <div>
+                    <h3>All Categories</h3>
+                    <p class="intro" style="font-size:11px; margin-top:6px;">
+                        View, rename, or remove categories.
+                    </p>
+                </div>
+
+                <span class="count-badge"
+                      th:text="${#lists.size(categories)} + ' total'">
+                    0 total
+                </span>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Category Details</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="cat : ${categories}">
+
+                        <td>
+                            <span class="category-id"
+                                  th:text="'#' + ${cat.id}">
+                                #1
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="category-cell">
+
+                                <div class="category-avatar">
+                                    <i class="fa-solid fa-utensils"></i>
+                                </div>
+
+                                <div>
+                                    <div class="category-name"
+                                         th:text="${cat.name}">
+                                        Pizza
+                                    </div>
+
+                                    <div class="category-subtitle">
+                                        Food menu category
+                                    </div>
+                                </div>
+
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="category-label">
+                                <i class="fa-solid fa-circle-check"></i>
+                                Available
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="actions">
+
+                                <!-- EDIT -->
+                                <button type="button"
+                                        class="action-btn edit-btn"
+                                        th:attr="data-id=${cat.id},
+                                                 data-name=${cat.name}"
+                                        onclick="editCategory(this)">
+                                    <i class="fa-solid fa-pen"></i>
+                                    Edit
+                                </button>
+
+                                <!-- DELETE -->
+                                <form th:action="@{/admin/categories/delete/{id}(id=${cat.id})}"
+                                      method="post"
+                                      onsubmit="return confirm('Are you sure you want to delete this category?');">
+
+                                    <button type="submit"
+                                            class="action-btn delete-btn">
+                                        <i class="fa-solid fa-trash"></i>
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(categories)}">
+                        <td colspan="4">
+
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fa-solid fa-folder-open"></i>
+                                </div>
+
+                                <h4>No categories yet</h4>
+
+                                <p>
+                                    Add your first category using the form above.
+                                    Your categories will appear here.
+                                </p>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <footer class="footer">
+            © 2026 FoodHub · Online Food Ordering and Management System
+        </footer>
+
+    </main>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+        document.getElementById("sidebarOverlay").classList.toggle("open");
+    }
+
+    function editCategory(button) {
+        const id = button.getAttribute("data-id");
+        const oldName = button.getAttribute("data-name");
+
+        const newName = prompt(
+            "Enter the new category name:",
+            oldName
+        );
+
+        if (newName === null) {
+            return;
+        }
+
+        if (newName.trim() === "") {
+            alert("Category name cannot be empty.");
+            return;
+        }
+
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/admin/categories/update/" + encodeURIComponent(id);
+
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "name";
+        input.value = newName.trim();
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+
+</body>
+</html>

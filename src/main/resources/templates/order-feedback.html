@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Feedback - FoodHub</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fffaf5;
+            color: #292524;
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; }
+
+        .navbar {
+            background: #fff;
+            min-height: 70px;
+            padding: 15px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            color: #ff6b00;
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .logo i { margin-right: 8px; }
+
+        .nav-link {
+            color: #ff6b00;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .page {
+            max-width: 760px;
+            padding: 45px 20px 70px;
+            margin: auto;
+        }
+
+        .heading { margin-bottom: 25px; }
+
+        .heading h1 {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .heading h1 span { color: #ff6b00; }
+
+        .heading p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 22px;
+            box-shadow: 0 8px 28px rgba(0,0,0,.05);
+        }
+
+        .order-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .order-icon {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            background: #fff1e6;
+            color: #ff6b00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .order-heading h2 { font-size: 18px; margin-bottom: 5px; }
+
+        .order-heading p { font-size: 12px; color: #888; }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 13px;
+        }
+
+        .detail {
+            padding: 14px;
+            background: #fffaf5;
+            border-radius: 9px;
+            overflow-wrap: anywhere;
+        }
+
+        .detail small {
+            display: block;
+            color: #888;
+            margin-bottom: 7px;
+            font-size: 11px;
+        }
+
+        .detail strong { font-size: 14px; }
+
+        .detail .amount { color: #ff6b00; }
+
+        .form-title {
+            font-size: 19px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .form-subtitle {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .rating-options {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .rating-options input {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+        }
+
+        .rating-options label {
+            font-size: 34px;
+            color: #ddd;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .rating-options label:hover,
+        .rating-options label:hover ~ label,
+        .rating-options input:checked ~ label {
+            color: #ffb000;
+        }
+
+        .rating-options input:focus-visible + label {
+            outline: 2px solid #ff6b00;
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 145px;
+            resize: vertical;
+            padding: 14px;
+            border: 1px solid #e5ddd5;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 13px;
+            line-height: 1.7;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        textarea:focus {
+            border-color: #ff6b00;
+            box-shadow: 0 0 0 3px rgba(255,107,0,.1);
+        }
+
+        .message {
+            padding: 13px 15px;
+            border-radius: 9px;
+            font-size: 13px;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .success {
+            background: #eaf8ef;
+            color: #198754;
+        }
+
+        .error {
+            background: #ffe9e9;
+            color: #c62828;
+        }
+
+        .submit-btn {
+            width: 100%;
+            border: none;
+            border-radius: 9px;
+            background: #ff6b00;
+            color: white;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .submit-btn:hover {
+            background: #e85d00;
+            transform: translateY(-1px);
+        }
+
+        .submit-btn i { margin-right: 8px; }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #666;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .back-link:hover { color: #ff6b00; }
+
+        .previous-feedback {
+            border-top: 1px solid #eee;
+            margin-top: 25px;
+            padding-top: 20px;
+        }
+
+        .previous-feedback h3 {
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .stars {
+            color: #ffb000;
+            margin-bottom: 8px;
+        }
+
+        .previous-feedback p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 500px) {
+            .navbar { padding: 15px 20px; }
+            .heading h1 { font-size: 25px; }
+            .card { padding: 20px; }
+            .details { grid-template-columns: 1fr; }
+            .rating-options label { font-size: 30px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+    <a th:href="@{/}" class="logo">
+        <i class="fa-solid fa-utensils"></i>FoodHub
+    </a>
+    <a th:href="@{/orders}" class="nav-link">
+        <i class="fa-solid fa-arrow-left"></i> My Orders
+    </a>
+</header>
+
+<main class="page">
+
+    <div class="heading">
+        <h1>Rate Your <span>Order</span></h1>
+        <p>Tell us about your experience with this particular order.</p>
+    </div>
+
+    <div th:if="${successMessage}" class="message success"
+         th:text="${successMessage}"></div>
+
+    <div th:if="${errorMessage}" class="message error"
+         th:text="${errorMessage}"></div>
+
+    <!-- ORDER DETAILS -->
+    <section class="card">
+        <div class="order-heading">
+            <div class="order-icon">
+                <i class="fa-solid fa-receipt"></i>
+            </div>
+            <div>
+                <h2>Order #<span th:text="${order.id}">1</span></h2>
+                <p>Feedback for this order only</p>
+            </div>
+        </div>
+
+        <div class="details">
+            <div class="detail">
+                <small>Customer Name</small>
+                <strong th:text="${order.customerName}">Customer</strong>
+            </div>
+
+            <div class="detail">
+                <small>Order Status</small>
+                <strong th:text="${order.status}">PLACED</strong>
+            </div>
+
+            <div class="detail">
+                <small>Order Total</small>
+                <strong class="amount">
+                    ₹<span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 2)}">0.00</span>
+                </strong>
+            </div>
+
+            <div class="detail">
+                <small>Order ID</small>
+                <strong>#<span th:text="${order.id}">1</span></strong>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEEDBACK FORM -->
+    <section class="card" th:if="${#lists.isEmpty(existingFeedback)}">
+
+        <h2 class="form-title">How was your order?</h2>
+        <p class="form-subtitle">
+            Rate your food and delivery experience and share your comments.
+        </p>
+
+        <form th:action="@{/feedback/order/submit}" method="post">
+
+            <input type="hidden" name="orderId" th:value="${order.id}">
+
+            <label class="field-label">Your Rating</label>
+
+            <div class="rating-options">
+                <input type="radio" id="star5" name="rating" value="5" required>
+                <label for="star5" title="Excellent">★</label>
+
+                <input type="radio" id="star4" name="rating" value="4">
+                <label for="star4" title="Very Good">★</label>
+
+                <input type="radio" id="star3" name="rating" value="3">
+                <label for="star3" title="Good">★</label>
+
+                <input type="radio" id="star2" name="rating" value="2">
+                <label for="star2" title="Fair">★</label>
+
+                <input type="radio" id="star1" name="rating" value="1">
+                <label for="star1" title="Poor">★</label>
+            </div>
+
+            <label class="field-label" for="comment">
+                Your Review
+            </label>
+
+            <textarea id="comment"
+                      name="comment"
+                      maxlength="1000"
+                      required
+                      placeholder="Tell us about the food quality, packaging, delivery, or your overall experience..."></textarea>
+
+            <button type="submit" class="submit-btn">
+                <i class="fa-solid fa-paper-plane"></i>
+                Submit Order Feedback
+            </button>
+        </form>
+    </section>
+
+    <!-- ALREADY SUBMITTED -->
+    <section class="card" th:if="${!#lists.isEmpty(existingFeedback)}">
+        <h2 class="form-title">Your Feedback</h2>
+        <p class="form-subtitle">
+            Thank you for reviewing order
+            <strong th:text="'#' + ${order.id}">#1</strong>.
+        </p>
+
+        <div th:each="feedback : ${existingFeedback}"
+             class="previous-feedback">
+
+            <div class="stars">
+                <span th:each="i : ${#numbers.sequence(1, feedback.rating)}">★</span>
+            </div>
+
+            <p th:text="${feedback.comment}">Your review</p>
+        </div>
+    </section>
+
+    <a th:href="@{/orders}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i> Back to My Orders
+    </a>
+
+</main>
+</body>
+</html>

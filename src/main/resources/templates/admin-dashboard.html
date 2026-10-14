@@ -1,0 +1,1090 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FoodHub | Restaurant Control Center</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --orange: #ff6b35;
+            --orange-dark: #ed5421;
+            --dark: #202820;
+            --dark-soft: #2b352c;
+            --cream: #f8f5ef;
+            --white: #ffffff;
+            --text: #292f29;
+            --muted: #85877f;
+            --border: #eae5db;
+            --green: #497858;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 235px;
+            padding: 30px 17px 20px;
+            background: var(--dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px;
+            margin-bottom: 44px;
+            color: white;
+        }
+
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: var(--orange);
+            font-size: 21px;
+            flex-shrink: 0;
+        }
+
+        .brand-name {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .brand-name span {
+            color: var(--orange);
+        }
+
+        .brand-subtitle {
+            color: #a7b0a5;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .nav-label {
+            color: #879187;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            padding: 0 14px;
+            margin-bottom: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 13px 14px;
+            border-radius: 11px;
+            color: #c4ccc2;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .nav-links a i {
+            width: 19px;
+            text-align: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            background: var(--dark-soft);
+        }
+
+        .nav-links a.active {
+            border-left: 3px solid var(--orange);
+            padding-left: 11px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 25px;
+        }
+
+        .sidebar-note {
+            background: #303c31;
+            border-radius: 13px;
+            padding: 17px;
+            margin: 0 5px 20px;
+        }
+
+        .sidebar-note i {
+            color: #f5ad66;
+            font-size: 19px;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-note h4 {
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .sidebar-note p {
+            color: #b6c0b4;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .logout-link {
+            display: flex;
+            gap: 13px;
+            align-items: center;
+            padding: 15px 14px;
+            color: #f1b0a0;
+            border-top: 1px solid #3b443b;
+            font-size: 13px;
+        }
+
+        .logout-link:hover {
+            color: white;
+        }
+
+        /* MAIN CONTENT */
+
+        .main {
+            margin-left: 235px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            min-height: 77px;
+            background: rgba(255,255,255,0.88);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 38px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .breadcrumb {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .breadcrumb strong {
+            color: var(--text);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .today {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 17px;
+            border-left: 1px solid var(--border);
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #f9dfce;
+            color: #bd572b;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .profile-name {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .profile-role {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .menu-toggle {
+            display: none;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 21px;
+            cursor: pointer;
+        }
+
+        .content {
+            max-width: 1600px;
+            margin: auto;
+            padding: 31px 38px;
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--orange-dark);
+            text-transform: uppercase;
+            letter-spacing: 1.7px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 13px;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 24px;
+            height: 2px;
+            background: var(--orange);
+        }
+
+        .page-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 31px;
+            letter-spacing: -0.6px;
+            margin-bottom: 9px;
+        }
+
+        .intro {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* HERO */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            min-height: 235px;
+            padding: 32px 37px;
+            margin: 27px 0 32px;
+            border-radius: 18px;
+            color: white;
+            background:
+                radial-gradient(circle at 85% 15%, #ff9a58 0, transparent 29%),
+                linear-gradient(110deg, #b94723, #f16b37 65%, #fa9a5e);
+        }
+
+        .hero-content {
+            max-width: 490px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 7px 11px;
+            background: rgba(255,255,255,0.17);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 30px;
+            font-size: 10px;
+            margin-bottom: 17px;
+            letter-spacing: 0.7px;
+        }
+
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(25px, 3vw, 35px);
+            line-height: 1.25;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: #fff0e8;
+            font-size: 12px;
+            line-height: 1.8;
+            max-width: 390px;
+        }
+
+        .hero-art {
+            position: relative;
+            width: 195px;
+            height: 165px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+        }
+
+        .hero-circle {
+            position: absolute;
+            width: 155px;
+            height: 155px;
+            background: rgba(255,255,255,0.17);
+            border-radius: 50%;
+        }
+
+        .hero-art > i {
+            position: relative;
+            font-size: 102px;
+            color: #fff2d8;
+            filter: drop-shadow(0 12px 9px rgba(100,35,10,0.17));
+            transform: rotate(-8deg);
+        }
+
+        .hero-decoration {
+            position: absolute;
+            right: 35px;
+            top: 20px;
+            font-size: 26px;
+            color: #ffe1aa;
+        }
+
+        /* SECTION HEADINGS */
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .section-head h3 {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .section-head p {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 5px;
+        }
+
+        .small-link {
+            font-size: 11px;
+            color: var(--orange-dark);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* MANAGEMENT TILES */
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 15px;
+            margin-bottom: 33px;
+        }
+
+        .management-card {
+            display: block;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px 18px;
+            color: var(--text);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .management-card:hover {
+            transform: translateY(-4px);
+            border-color: #f1b18e;
+        }
+
+        .management-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            font-size: 17px;
+            margin-bottom: 19px;
+        }
+
+        .icon-orange {
+            color: #dc652d;
+            background: #fff0e5;
+        }
+
+        .icon-green {
+            color: #477c59;
+            background: #e9f4e9;
+        }
+
+        .icon-blue {
+            color: #5375a5;
+            background: #eaf0fa;
+        }
+
+        .icon-purple {
+            color: #8b6b9f;
+            background: #f2eaf8;
+        }
+
+        .management-card h4 {
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .management-card p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+            min-height: 38px;
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 17px;
+            padding-top: 13px;
+            border-top: 1px solid #f1eee8;
+            color: var(--orange-dark);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* LOWER PANELS */
+
+        .lower-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 23px;
+            min-width: 0;
+        }
+
+        .panel-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 21px;
+        }
+
+        .panel-heading h3 {
+            font-size: 15px;
+        }
+
+        .panel-heading p {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        .panel-heading > i {
+            color: var(--orange);
+            font-size: 19px;
+        }
+
+        .order-info {
+            display: flex;
+            gap: 13px;
+            align-items: flex-start;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0eee8;
+        }
+
+        .order-info:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .order-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            background: #fff0e5;
+            color: var(--orange-dark);
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+        }
+
+        .order-info h4 {
+            font-size: 12px;
+            margin: 2px 0 6px;
+        }
+
+        .order-info p {
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .status {
+            margin-left: auto;
+            font-size: 10px;
+            padding: 6px 9px;
+            border-radius: 20px;
+            white-space: nowrap;
+            background: #fff0d7;
+            color: #a66a16;
+        }
+
+        .status.ready {
+            background: #e5f3e7;
+            color: #39744a;
+        }
+
+        .status.process {
+            background: #eaf0fa;
+            color: #5276a9;
+        }
+
+        .overview-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0eee8;
+        }
+
+        .overview-row:last-child {
+            border-bottom: none;
+        }
+
+        .overview-row > i {
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            background: #fff0e5;
+            color: var(--orange);
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+        }
+
+        .overview-row span {
+            font-size: 12px;
+        }
+
+        .overview-row small {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .overview-row a {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--orange-dark);
+            white-space: nowrap;
+        }
+
+        .footer {
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 23px 10px;
+            margin-top: 32px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        @media (max-width: 1200px) {
+            .management-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .lower-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 750px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .topbar {
+                padding: 15px 18px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .breadcrumb {
+                margin-right: auto;
+            }
+
+            .today {
+                display: none;
+            }
+
+            .content {
+                padding: 23px 17px;
+            }
+
+            .hero {
+                padding: 25px;
+            }
+
+            .hero-art {
+                width: 95px;
+            }
+
+            .hero-art > i {
+                font-size: 65px;
+            }
+
+            .hero-circle {
+                width: 90px;
+                height: 90px;
+            }
+
+            .page-heading {
+                font-size: 27px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .management-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-art {
+                display: none;
+            }
+
+            .hero {
+                min-height: auto;
+            }
+
+            .profile-name {
+                max-width: 95px;
+                overflow-wrap: anywhere;
+            }
+
+            .panel {
+                padding: 17px;
+            }
+
+            .status {
+                font-size: 9px;
+                padding: 5px 7px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <a th:href="@{/admin/dashboard}" class="brand">
+        <div class="brand-icon">
+            <i class="fa-solid fa-utensils"></i>
+        </div>
+        <div>
+            <div class="brand-name">Food<span>Hub</span></div>
+            <div class="brand-subtitle">RESTAURANT CONTROL CENTER</div>
+        </div>
+    </a>
+
+    <div class="nav-label">WORKSPACE</div>
+
+    <nav class="nav-links">
+
+        <a th:href="@{/admin/dashboard}" class="active">
+            <i class="fa-solid fa-chart-pie"></i>
+            Dashboard
+        </a>
+
+        <a th:href="@{/admin/foods}">
+            <i class="fa-solid fa-burger"></i>
+            Food Catalogue
+        </a>
+
+        <a th:href="@{/admin/categories}">
+            <i class="fa-solid fa-layer-group"></i>
+            Categories
+        </a>
+
+        <a th:href="@{/admin/orders}">
+            <i class="fa-solid fa-receipt"></i>
+            Order Management
+        </a>
+
+        <a th:href="@{/admin/users}">
+            <i class="fa-solid fa-user-group"></i>
+            Customers
+        </a>
+
+        <!-- CUSTOMER FEEDBACK SIDEBAR LINK -->
+        <a th:href="@{/admin/feedback}">
+            <i class="fa-solid fa-comments"></i>
+            Customer Feedback
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="sidebar-note">
+            <i class="fa-solid fa-lightbulb"></i>
+            <h4>Keep your menu fresh!</h4>
+            <p>Update your food catalogue and prices to keep your customers informed.</p>
+        </div>
+
+        <a th:href="@{/admin/logout}" class="logout-link">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            Sign out
+        </a>
+
+    </div>
+
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+    <header class="topbar">
+
+        <button class="menu-toggle"
+                type="button"
+                onclick="toggleSidebar()"
+                aria-label="Open navigation">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="breadcrumb">
+            FoodHub <span style="padding:0 8px;">/</span>
+            <strong>Dashboard</strong>
+        </div>
+
+        <div class="topbar-right">
+
+            <div class="today">
+                <i class="fa-regular fa-calendar"></i>
+                Restaurant Admin
+            </div>
+
+            <div class="profile">
+                <div class="avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div>
+                    <div class="profile-name"
+                         th:text="${adminName} ?: 'FoodHub Admin'">
+                        FoodHub Admin
+                    </div>
+                    <div class="profile-role">Administrator</div>
+                </div>
+            </div>
+
+        </div>
+
+    </header>
+
+    <main class="content">
+
+        <div class="eyebrow">YOUR RESTAURANT AT A GLANCE</div>
+
+        <h1 class="page-heading">Good to have you here.</h1>
+
+        <p class="intro">
+            Welcome back,
+            <strong th:text="${adminName}">Admin</strong>.
+            Here's your space to manage the FoodHub experience.
+        </p>
+
+        <!-- WELCOME BANNER -->
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <div class="hero-tag">
+                    <i class="fa-solid fa-sparkles"></i>
+                    FOODHUB ADMINISTRATION
+                </div>
+
+                <h2>Great food begins<br>with great management.</h2>
+
+                <p>
+                    Keep your menu organized, manage customer orders,
+                    and maintain a smooth food ordering experience.
+                </p>
+
+            </div>
+
+            <div class="hero-art">
+                <div class="hero-circle"></div>
+                <i class="fa-solid fa-burger"></i>
+                <span class="hero-decoration">
+                    <i class="fa-solid fa-star"></i>
+                </span>
+            </div>
+
+        </section>
+
+        <!-- MANAGEMENT -->
+        <div class="section-head">
+            <div>
+                <h3>Manage your restaurant</h3>
+                <p>Everything you need, organized in one place.</p>
+            </div>
+        </div>
+
+        <section class="management-grid">
+
+            <a th:href="@{/admin/foods}" class="management-card">
+                <div class="management-icon icon-orange">
+                    <i class="fa-solid fa-burger"></i>
+                </div>
+                <h4>Food Catalogue</h4>
+                <p>Add new dishes, edit food details, and manage availability.</p>
+                <div class="card-bottom">
+                    <span>Manage menu</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a th:href="@{/admin/categories}" class="management-card">
+                <div class="management-icon icon-green">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <h4>Food Categories</h4>
+                <p>Organize menu items and maintain category information.</p>
+                <div class="card-bottom">
+                    <span>Explore categories</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a th:href="@{/admin/orders}" class="management-card">
+                <div class="management-icon icon-blue">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+                <h4>Customer Orders</h4>
+                <p>Review incoming orders and update their progress.</p>
+                <div class="card-bottom">
+                    <span>View orders</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a th:href="@{/admin/users}" class="management-card">
+                <div class="management-icon icon-purple">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <h4>Customer Directory</h4>
+                <p>View registered users and manage customer accounts.</p>
+                <div class="card-bottom">
+                    <span>View customers</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <!-- CUSTOMER FEEDBACK MANAGEMENT CARD -->
+            <a th:href="@{/admin/feedback}" class="management-card">
+                <div class="management-icon icon-purple">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <h4>Customer Feedback</h4>
+                <p>Read customer reviews, ratings, and comments.</p>
+                <div class="card-bottom">
+                    <span>View feedback</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+
+        </section>
+
+        <!-- LOWER CONTENT -->
+        <section class="lower-grid">
+
+            <div class="panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h3>Order control center</h3>
+                        <p>Shortcuts for handling customer orders.</p>
+                    </div>
+                    <i class="fa-solid fa-clipboard-check"></i>
+                </div>
+
+                <div class="order-info">
+                    <div class="order-icon">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <div>
+                        <h4>Pending orders</h4>
+                        <p>Review orders awaiting confirmation.</p>
+                    </div>
+                    <span class="status">Pending</span>
+                </div>
+
+                <div class="order-info">
+                    <div class="order-icon">
+                        <i class="fa-solid fa-motorcycle"></i>
+                    </div>
+                    <div>
+                        <h4>Order processing</h4>
+                        <p>Manage orders currently being prepared.</p>
+                    </div>
+                    <span class="status process">Processing</span>
+                </div>
+
+                <div class="order-info">
+                    <div class="order-icon">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <h4>Completed orders</h4>
+                        <p>Check completed orders and their details.</p>
+                    </div>
+                    <span class="status ready">Completed</span>
+                </div>
+
+                <div style="margin-top:22px;">
+                    <a th:href="@{/admin/orders}" class="small-link">
+                        OPEN ORDER MANAGEMENT
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h3>Quick navigation</h3>
+                        <p>Jump to a management section.</p>
+                    </div>
+                    <i class="fa-solid fa-compass"></i>
+                </div>
+
+                <div class="overview-row">
+                    <i class="fa-solid fa-plus"></i>
+                    <div>
+                        <span>Add food items</span>
+                        <small>Expand your menu</small>
+                    </div>
+                    <a th:href="@{/admin/foods}">Open</a>
+                </div>
+
+                <div class="overview-row">
+                    <i class="fa-solid fa-tags"></i>
+                    <div>
+                        <span>Organize categories</span>
+                        <small>Manage food groups</small>
+                    </div>
+                    <a th:href="@{/admin/categories}">Open</a>
+                </div>
+
+                <div class="overview-row">
+                    <i class="fa-solid fa-box"></i>
+                    <div>
+                        <span>Review orders</span>
+                        <small>Track customer requests</small>
+                    </div>
+                    <a th:href="@{/admin/orders}">Open</a>
+                </div>
+
+                <div class="overview-row">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <div>
+                        <span>Manage customers</span>
+                        <small>Registered accounts</small>
+                    </div>
+                    <a th:href="@{/admin/users}">Open</a>
+                </div>
+
+                <!-- CUSTOMER FEEDBACK QUICK NAVIGATION -->
+                <div class="overview-row">
+                    <i class="fa-solid fa-comments"></i>
+                    <div>
+                        <span>Customer feedback</span>
+                        <small>Ratings and comments</small>
+                    </div>
+                    <a th:href="@{/admin/feedback}">Open</a>
+                </div>
+
+            </div>
+
+        </section>
+
+        <footer class="footer">
+            © 2026 FoodHub · Online Food Ordering and Management System
+        </footer>
+
+    </main>
+
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+    }
+</script>
+
+</body>
+</html>

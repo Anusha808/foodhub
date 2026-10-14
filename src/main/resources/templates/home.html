@@ -1,908 +1,677 @@
+
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <title>FoodHub - Delicious Food Delivered</title>
 
-    <title>FoodHub | Online Food Ordering</title>
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
 
+    <!-- Font Awesome -->
     <link rel="stylesheet"
-          th:href="@{/css/home.css}">
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- Home CSS -->
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 
 <body>
 
-
-<!-- =====================================================
+<!-- =========================================================
      NAVBAR
-===================================================== -->
-
+========================================================= -->
 <header class="navbar">
-
     <div class="nav-container">
 
-
-        <!-- LOGO -->
-
-        <a href="/" class="logo">
-
-            <span class="logo-icon">
-                🍴
-            </span>
-
-            <span>
-                FoodHub
-            </span>
-
+        <!-- Logo -->
+        <a th:href="@{/}" class="logo">
+            <i class="fa-solid fa-utensils"></i>
+            FoodHub
         </a>
 
-
-        <!-- NAVIGATION -->
-
-        <nav class="nav-menu">
-
-            <a href="/" class="active">
-                Home
-            </a>
-
-            <a href="/#categories">
-                Categories
-            </a>
-
-            <a href="/#popular">
-                Popular
-            </a>
-
-            <a href="/#about">
-                About
-            </a>
-
+        <!-- Navigation -->
+        <nav class="nav-links">
+            <a th:href="@{/}" class="active">Home</a>
+            <a th:href="@{/#categories}">Categories</a>
+            <a th:href="@{/#popular}">Popular</a>
+            <a th:href="@{/#about}">About</a>
         </nav>
 
+        <!-- Navbar Search -->
+        <div class="navbar-search" id="navbarSearch">
+            <i class="fa-solid fa-magnifying-glass"></i>
 
-        <!-- =================================================
-             ACCOUNT AREA
-        ================================================= -->
+            <input type="text"
+                   id="homeFoodSearch"
+                   placeholder="Search food..."
+                   autocomplete="off">
 
-        <div class="nav-actions">
-
-
-            <!-- =============================================
-                 USER NOT LOGGED IN
-            ============================================== -->
-
-            <th:block th:if="${userName == null}">
-
-                <a href="/login"
-                   class="login-btn">
-
-                    Login
-
-                </a>
-
-
-                <a href="/register"
-                   class="register-btn">
-
-                    Register
-
-                </a>
-
-            </th:block>
-
-
-            <!-- =============================================
-                 USER LOGGED IN
-            ============================================== -->
-
-            <th:block th:if="${userName != null}">
-
-                <span class="welcome-user">
-
-                    Welcome,
-
-                    <strong
-                        th:text="${userName}">
-                    </strong>
-
-                </span>
-
-
-                <a href="/logout"
-                   class="logout-btn">
-
-                    Logout
-
-                </a>
-
-            </th:block>
-
-
-            <!-- CART -->
-
-            <a href="/cart"
-               class="cart-link"
-               title="Shopping Cart">
-
-                🛒
-
-            </a>
-
+            <button type="button"
+                    id="homeSearchClear"
+                    class="search-clear"
+                    aria-label="Clear search">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
 
-    </div>
+        <!-- Navbar Right -->
+        <div class="nav-right">
 
+            <!-- Logged Out -->
+            <div th:if="${session.userId == null}" class="auth-links">
+                <a th:href="@{/login}" class="login-btn">Login</a>
+                <a th:href="@{/register}" class="register-btn">Register</a>
+            </div>
+
+            <!-- Logged In -->
+            <div th:if="${session.userId != null}" class="profile-wrapper">
+
+                <button type="button"
+                        class="profile-btn"
+                        id="profileToggle">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profile</span>
+                    <i class="fa-solid fa-chevron-down profile-arrow"></i>
+                </button>
+
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown" id="profileDropdown">
+
+                    <div class="profile-dropdown-header">
+                        <div class="profile-avatar">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+
+                        <div class="profile-header-text">
+                            <strong>My Account</strong>
+                            <span>FoodHub Customer</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-dropdown-divider"></div>
+
+                    <a th:href="@{/profile}" class="profile-dropdown-item">
+                        <i class="fa-regular fa-user"></i>
+                        <span>My Profile</span>
+                    </a>
+
+                    <a th:href="@{/orders}" class="profile-dropdown-item">
+                        <i class="fa-solid fa-receipt"></i>
+                        <span>My Orders</span>
+                    </a>
+
+                    <a th:href="@{/cart}" class="profile-dropdown-item">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>My Cart</span>
+                    </a>
+
+                    <div class="profile-dropdown-divider"></div>
+
+                    <a th:href="@{/logout}"
+                       class="profile-dropdown-item logout-item">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </header>
 
+<!-- =========================================================
+     HOME SEARCH RESULT
+========================================================= -->
+<div class="home-search-result" id="homeSearchResult">
+    <span id="homeSearchResultText"></span>
+</div>
 
-
-<!-- =====================================================
+<!-- =========================================================
      HERO SECTION
-===================================================== -->
-
-<section class="hero">
-
+========================================================= -->
+<section class="hero hero-background-slideshow">
     <div class="hero-container">
-
 
         <div class="hero-content">
 
-            <span class="hero-label">
-
-                🍽️ Delicious food, delivered fast
-
+            <span class="hero-badge">
+                <i class="fa-solid fa-star"></i>
+                Fresh &amp; Delicious
             </span>
 
-
             <h1>
-
-                Your favorite food
-
-                <span>
-                    at your doorstep.
-                </span>
-
+                Delicious Food,
+                <span>Delivered Fast.</span>
             </h1>
 
-
             <p>
-
-                Discover delicious meals from your favorite
-                restaurants and enjoy fast, convenient delivery
-                right to your door.
-
+                Discover delicious meals from FoodHub.
+                Order your favourite food and enjoy
+                fast and convenient delivery.
             </p>
 
-
             <div class="hero-buttons">
-
-                <a href="/#popular"
-                   class="primary-btn">
-
+                <a th:href="@{/foods}" class="primary-btn">
                     Explore Food
-
-                    <span>
-                        →
-                    </span>
-
+                    <i class="fa-solid fa-arrow-right"></i>
                 </a>
 
-
-                <a href="/#categories"
-                   class="secondary-btn">
-
+                <a href="#categories" class="secondary-btn">
                     View Categories
-
                 </a>
-
-            </div>
-
-
-            <div class="hero-stats">
-
-                <div class="hero-stat">
-
-                    <strong>
-                        4.8
-                    </strong>
-
-                    <span>
-                        ⭐ Food Rating
-                    </span>
-
-                </div>
-
-
-                <div class="hero-stat">
-
-                    <strong>
-                        30 min
-                    </strong>
-
-                    <span>
-                        Fast Delivery
-                    </span>
-
-                </div>
-
             </div>
 
         </div>
-
-
-        <div class="hero-image">
-
-            <div class="food-circle">
-
-                🍔
-
-            </div>
-
-        </div>
-
     </div>
-
 </section>
 
-
-
-<!-- =====================================================
-     CATEGORY SECTION
-===================================================== -->
-
-<section class="categories-section"
-         id="categories">
-
+<!-- =========================================================
+     CATEGORIES
+========================================================= -->
+<section class="categories-section" id="categories">
     <div class="section-container">
 
-
         <div class="section-header">
-
             <div>
-
-                <span class="section-label">
-                    EXPLORE
-                </span>
-
-                <h2>
-                    Browse by Category
-                </h2>
-
+                <span class="section-label">EXPLORE</span>
+                <h2>Browse Categories</h2>
             </div>
 
-
-            <a href="#popular"
-               class="view-all">
-
-                View all
-
-                <span>
-                    →
-                </span>
-
+            <a th:href="@{/foods}" class="view-all">
+                View All
+                <i class="fa-solid fa-arrow-right"></i>
             </a>
-
         </div>
-
 
         <div class="category-grid">
 
-
-            <a href="#popular"
-               class="category-card">
-
+            <a th:href="@{/foods(category='Italian')}" class="category-card">
                 <div class="category-icon">
-                    🍕
+                    <i class="fa-solid fa-pizza-slice"></i>
                 </div>
-
-                <h3>
-                    Pizza
-                </h3>
-
-                <p>
-                    25+ Items
-                </p>
-
+                <h3>Italian</h3>
+                <p>Pizza &amp; Pasta</p>
             </a>
 
-
-            <a href="#popular"
-               class="category-card">
-
+            <a th:href="@{/foods(category='Indian')}" class="category-card">
                 <div class="category-icon">
-                    🍔
+                    <i class="fa-solid fa-bowl-rice"></i>
                 </div>
-
-                <h3>
-                    Burgers
-                </h3>
-
-                <p>
-                    30+ Items
-                </p>
-
+                <h3>Indian</h3>
+                <p>Authentic Flavours</p>
             </a>
 
-
-            <a href="#popular"
-               class="category-card">
-
+            <a th:href="@{/foods(category='Burgers')}" class="category-card">
                 <div class="category-icon">
-                    🍜
+                    <i class="fa-solid fa-burger"></i>
                 </div>
-
-                <h3>
-                    Noodles
-                </h3>
-
-                <p>
-                    20+ Items
-                </p>
-
+                <h3>Burgers</h3>
+                <p>Juicy &amp; Delicious</p>
             </a>
 
-
-            <a href="#popular"
-               class="category-card">
-
+            <a th:href="@{/foods(category='Desserts')}" class="category-card">
                 <div class="category-icon">
-                    🍛
+                    <i class="fa-solid fa-ice-cream"></i>
                 </div>
-
-                <h3>
-                    Indian
-                </h3>
-
-                <p>
-                    40+ Items
-                </p>
-
-            </a>
-
-
-            <a href="#popular"
-               class="category-card">
-
-                <div class="category-icon">
-                    🍰
-                </div>
-
-                <h3>
-                    Desserts
-                </h3>
-
-                <p>
-                    18+ Items
-                </p>
-
-            </a>
-
-
-            <a href="#popular"
-               class="category-card">
-
-                <div class="category-icon">
-                    🥤
-                </div>
-
-                <h3>
-                    Beverages
-                </h3>
-
-                <p>
-                    15+ Items
-                </p>
-
+                <h3>Desserts</h3>
+                <p>Sweet Treats</p>
             </a>
 
         </div>
-
     </div>
-
 </section>
 
-
-
-<!-- =====================================================
-     POPULAR FOOD SECTION
-===================================================== -->
-
-<section class="popular-section"
-         id="popular">
-
+<!-- =========================================================
+     POPULAR FOOD
+========================================================= -->
+<section class="popular-section" id="popular">
     <div class="section-container">
 
-
         <div class="section-header">
-
             <div>
-
-                <span class="section-label">
-                    CUSTOMER FAVORITES
-                </span>
-
-                <h2>
-                    Popular Food
-                </h2>
-
+                <span class="section-label">OUR SPECIALS</span>
+                <h2>Popular Food</h2>
             </div>
 
+            <a th:href="@{/foods}" class="view-all">
+                View All
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
 
-            <a href="#popular"
-               class="view-all">
+        <!-- Food Grid -->
+        <div class="food-grid" id="homeFoodGrid">
 
-                View all
+            <!-- Food Card 1 -->
+            <div class="food-card"
+                 data-food-search="margherita pizza italian fresh tomatoes mozzarella basil">
 
-                <span>
-                    →
-                </span>
+                <div class="food-card-image">
+                    <i class="fa-solid fa-pizza-slice"></i>
+                </div>
 
+                <div class="food-card-content">
+                    <span class="food-category">Italian</span>
+                    <h3>Margherita Pizza</h3>
+                    <p>Fresh tomatoes, mozzarella and basil.</p>
+
+                    <div class="food-bottom">
+                        <span class="price">₹299</span>
+                        <a th:href="@{/foods}"
+                           class="add-btn"
+                           title="View Food Menu"
+                           aria-label="View food menu">
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Card 2 -->
+            <div class="food-card"
+                 data-food-search="classic burger burgers beef patty fresh vegetables">
+
+                <div class="food-card-image">
+                    <i class="fa-solid fa-burger"></i>
+                </div>
+
+                <div class="food-card-content">
+                    <span class="food-category">Burgers</span>
+                    <h3>Classic Burger</h3>
+                    <p>Juicy beef patty with fresh vegetables.</p>
+
+                    <div class="food-bottom">
+                        <span class="price">₹199</span>
+                        <a th:href="@{/foods}"
+                           class="add-btn"
+                           title="View Food Menu"
+                           aria-label="View food menu">
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Card 3 -->
+            <div class="food-card"
+                 data-food-search="chicken biryani indian aromatic basmati rice tender chicken">
+
+                <div class="food-card-image">
+                    <i class="fa-solid fa-bowl-rice"></i>
+                </div>
+
+                <div class="food-card-content">
+                    <span class="food-category">Indian</span>
+                    <h3>Chicken Biryani</h3>
+                    <p>Aromatic basmati rice with tender chicken.</p>
+
+                    <div class="food-bottom">
+                        <span class="price">₹249</span>
+                        <a th:href="@{/foods}"
+                           class="add-btn"
+                           title="View Food Menu"
+                           aria-label="View food menu">
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Card 4 -->
+            <div class="food-card"
+                 data-food-search="chocolate sundae desserts ice cream rich chocolate">
+
+                <div class="food-card-image">
+                    <i class="fa-solid fa-ice-cream"></i>
+                </div>
+
+                <div class="food-card-content">
+                    <span class="food-category">Desserts</span>
+                    <h3>Chocolate Sundae</h3>
+                    <p>Creamy ice cream with rich chocolate.</p>
+
+                    <div class="food-bottom">
+                        <span class="price">₹149</span>
+                        <a th:href="@{/foods}"
+                           class="add-btn"
+                           title="View Food Menu"
+                           aria-label="View food menu">
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Search Empty State -->
+        <div class="home-search-empty" id="homeSearchEmpty">
+
+            <div class="home-search-empty-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+
+            <h3>No Food Found</h3>
+
+            <p>
+                We couldn't find a matching food.
+                Try searching for pizza, burger, biryani or dessert.
+            </p>
+
+            <a th:href="@{/foods}" class="primary-btn">
+                Explore Full Menu
+                <i class="fa-solid fa-arrow-right"></i>
             </a>
 
         </div>
 
-
-        <div class="food-grid">
-
-
-            <!-- CHEESE PIZZA -->
-
-            <div class="food-card">
-
-                <div class="food-image pizza-bg">
-
-                    <span class="food-badge">
-                        🍕 Popular
-                    </span>
-
-                    <span class="rating">
-                        ⭐ 4.8
-                    </span>
-
-                    <div class="food-emoji">
-                        🍕
-                    </div>
-
-                </div>
-
-
-                <div class="food-info">
-
-                    <h3>
-                        Cheese Pizza
-                    </h3>
-
-                    <p>
-                        Classic cheese pizza with
-                        fresh ingredients.
-                    </p>
-
-
-                    <div class="food-bottom">
-
-                        <strong>
-                            ₹249
-                        </strong>
-
-                        <a href="/cart"
-                           class="add-btn">
-
-                            +
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- CLASSIC BURGER -->
-
-            <div class="food-card">
-
-                <div class="food-image burger-bg">
-
-                    <span class="food-badge">
-                        🍔 Best Seller
-                    </span>
-
-                    <span class="rating">
-                        ⭐ 4.9
-                    </span>
-
-                    <div class="food-emoji">
-                        🍔
-                    </div>
-
-                </div>
-
-
-                <div class="food-info">
-
-                    <h3>
-                        Classic Burger
-                    </h3>
-
-                    <p>
-                        Juicy burger with fresh
-                        vegetables and cheese.
-                    </p>
-
-
-                    <div class="food-bottom">
-
-                        <strong>
-                            ₹199
-                        </strong>
-
-                        <a href="/cart"
-                           class="add-btn">
-
-                            +
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- VEG NOODLES -->
-
-            <div class="food-card">
-
-                <div class="food-image noodles-bg">
-
-                    <span class="food-badge">
-                        🍜 Trending
-                    </span>
-
-                    <span class="rating">
-                        ⭐ 4.7
-                    </span>
-
-                    <div class="food-emoji">
-                        🍜
-                    </div>
-
-                </div>
-
-
-                <div class="food-info">
-
-                    <h3>
-                        Veg Noodles
-                    </h3>
-
-                    <p>
-                        Delicious noodles cooked
-                        with fresh vegetables.
-                    </p>
-
-
-                    <div class="food-bottom">
-
-                        <strong>
-                            ₹179
-                        </strong>
-
-                        <a href="/cart"
-                           class="add-btn">
-
-                            +
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- VEG BIRYANI -->
-
-            <div class="food-card">
-
-                <div class="food-image biryani-bg">
-
-                    <span class="food-badge">
-                        🍛 Special
-                    </span>
-
-                    <span class="rating">
-                        ⭐ 4.8
-                    </span>
-
-                    <div class="food-emoji">
-                        🍛
-                    </div>
-
-                </div>
-
-
-                <div class="food-info">
-
-                    <h3>
-                        Veg Biryani
-                    </h3>
-
-                    <p>
-                        Aromatic rice with delicious
-                        spices and vegetables.
-                    </p>
-
-
-                    <div class="food-bottom">
-
-                        <strong>
-                            ₹229
-                        </strong>
-
-                        <a href="/cart"
-                           class="add-btn">
-
-                            +
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
-
 </section>
 
-
-
-<!-- =====================================================
-     ABOUT SECTION
-===================================================== -->
-
-<section class="about-section"
-         id="about">
-
+<!-- =========================================================
+     ABOUT
+========================================================= -->
+<section class="about-section" id="about">
     <div class="section-container">
 
         <div class="about-content">
 
+            <span class="section-label">ABOUT FOODHUB</span>
 
-            <div class="about-text">
+            <h2>
+                Good Food.
+                <span>Good Mood.</span>
+            </h2>
 
-                <span class="section-label">
-                    WHY FOODHUB?
-                </span>
+            <p>
+                FoodHub makes ordering delicious food simple, fast
+                and convenient. Browse your favourite dishes, add
+                them to your cart and place your order in just a few clicks.
+            </p>
 
-                <h2>
+            <div class="about-features">
 
-                    Food ordering made
-                    simple and convenient.
-
-                </h2>
-
-
-                <p>
-
-                    FoodHub brings delicious food and
-                    customers together through a simple
-                    and convenient online ordering platform.
-
-                </p>
-
-            </div>
-
-
-            <div class="features-grid">
-
-
-                <div class="feature-card">
-
-                    <div class="feature-icon">
-                        🚀
+                <div class="feature">
+                    <i class="fa-solid fa-bolt"></i>
+                    <div>
+                        <h4>Fast Delivery</h4>
+                        <p>Get your food quickly.</p>
                     </div>
-
-                    <h3>
-                        Fast Delivery
-                    </h3>
-
-                    <p>
-                        Get your food delivered quickly.
-                    </p>
-
                 </div>
 
-
-                <div class="feature-card">
-
-                    <div class="feature-icon">
-                        ⭐
+                <div class="feature">
+                    <i class="fa-solid fa-leaf"></i>
+                    <div>
+                        <h4>Fresh Food</h4>
+                        <p>Quality ingredients.</p>
                     </div>
-
-                    <h3>
-                        Quality Food
-                    </h3>
-
-                    <p>
-                        Fresh and delicious meals.
-                    </p>
-
                 </div>
 
-
-                <div class="feature-card">
-
-                    <div class="feature-icon">
-                        🛒
+                <div class="feature">
+                    <i class="fa-solid fa-shield-heart"></i>
+                    <div>
+                        <h4>Easy Ordering</h4>
+                        <p>Simple and secure.</p>
                     </div>
-
-                    <h3>
-                        Easy Ordering
-                    </h3>
-
-                    <p>
-                        Simple and convenient ordering.
-                    </p>
-
                 </div>
 
             </div>
-
         </div>
-
     </div>
-
 </section>
 
-
-
-<!-- =====================================================
+<!-- =========================================================
      FOOTER
-===================================================== -->
-
+========================================================= -->
 <footer class="footer">
 
     <div class="footer-container">
 
+        <!-- Brand -->
+        <div class="footer-column">
 
-        <div class="footer-brand">
-
-            <a href="/" class="logo">
-
-                <span class="logo-icon">
-                    🍴
-                </span>
-
-                <span>
-                    FoodHub
-                </span>
-
+            <a th:href="@{/}" class="footer-logo">
+                <i class="fa-solid fa-utensils"></i>
+                FoodHub
             </a>
 
-
             <p>
-
-                Delicious food delivered right
-                to your doorstep.
-
+                Delicious food delivered right to your doorstep.
             </p>
 
         </div>
 
-
-
+        <!-- Quick Links -->
         <div class="footer-column">
 
-            <h3>
-                Quick Links
-            </h3>
+            <h4>Quick Links</h4>
 
-            <a href="/">
-                Home
-            </a>
-
-            <a href="/#categories">
-                Categories
-            </a>
-
-            <a href="/#popular">
-                Popular Food
-            </a>
-
-            <a href="/#about">
-                About
-            </a>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/foods}">Food Menu</a>
+            <a th:href="@{/#categories}">Categories</a>
+            <a th:href="@{/#about}">About</a>
 
         </div>
 
-
-
+        <!-- Account -->
         <div class="footer-column">
 
-            <h3>
-                Account
-            </h3>
+            <h4>Account</h4>
 
+            <!-- Logged In: Admin Login is hidden -->
+            <div th:if="${session.userId != null}">
 
-            <!-- NOT LOGGED IN -->
-
-            <th:block th:if="${userName == null}">
-
-                <a href="/login">
-                    Login
+                <a th:href="@{/profile}">
+                    <i class="fa-regular fa-user"></i>
+                    Profile
                 </a>
 
-                <a href="/register">
-                    Register
+                <a th:href="@{/orders}">
+                    <i class="fa-solid fa-receipt"></i>
+                    My Orders
                 </a>
 
-            </th:block>
+                <a th:href="@{/cart}">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    Cart
+                </a>
 
-
-            <!-- LOGGED IN -->
-
-            <th:block th:if="${userName != null}">
-
-                <span class="footer-user">
-
-                    Logged in as:
-
-                    <strong
-                        th:text="${userName}">
-                    </strong>
-
-                </span>
-
-
-                <a href="/logout">
+                <a th:href="@{/logout}">
+                    <i class="fa-solid fa-right-from-bracket"></i>
                     Logout
                 </a>
 
-            </th:block>
+            </div>
 
+            <!-- Logged Out: Login, Register and Admin Login appear -->
+            <div th:if="${session.userId == null}">
 
-            <a href="/cart">
-                Cart
-            </a>
+                <a th:href="@{/login}">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Login
+                </a>
 
+                <a th:href="@{/register}">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Register
+                </a>
 
-            <a href="#">
-                Orders
-            </a>
+                <a th:href="@{/admin/login}">
+                    <i class="fa-solid fa-user-shield"></i>
+                    Admin Login
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Contact -->
+        <div class="footer-column">
+
+            <h4>Contact</h4>
+
+            <p>
+                <i class="fa-solid fa-envelope"></i>
+                support@foodhub.com
+            </p>
+
+            <p>
+                <i class="fa-solid fa-phone"></i>
+                +91 98765 43210
+            </p>
 
         </div>
 
     </div>
 
-
+    <!-- Footer Bottom -->
     <div class="footer-bottom">
-
-        <p>
-            © 2026 FoodHub. All Rights Reserved.
-        </p>
-
+        <p>© 2026 FoodHub. All Rights Reserved.</p>
     </div>
 
 </footer>
 
+<!-- =========================================================
+     PROFILE DROPDOWN SCRIPT
+========================================================= -->
+<script>
+    const profileToggle = document.getElementById("profileToggle");
+    const profileDropdown = document.getElementById("profileDropdown");
+
+    if (profileToggle && profileDropdown) {
+        profileToggle.addEventListener("click", function (event) {
+            event.stopPropagation();
+            profileDropdown.classList.toggle("show");
+        });
+
+        document.addEventListener("click", function (event) {
+            if (
+                !profileDropdown.contains(event.target) &&
+                !profileToggle.contains(event.target)
+            ) {
+                profileDropdown.classList.remove("show");
+            }
+        });
+    }
+</script>
+
+<!-- =========================================================
+     HOME SEARCH SCRIPT
+========================================================= -->
+<script>
+    const homeFoodSearch = document.getElementById("homeFoodSearch");
+    const homeSearchClear = document.getElementById("homeSearchClear");
+    const homeFoodCards = document.querySelectorAll("#homeFoodGrid .food-card");
+    const homeSearchEmpty = document.getElementById("homeSearchEmpty");
+    const homeSearchResult = document.getElementById("homeSearchResult");
+    const homeSearchResultText = document.getElementById("homeSearchResultText");
+
+    function searchHomeFood() {
+        const searchValue = homeFoodSearch.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        homeFoodCards.forEach(function (card) {
+            const searchableText =
+                (card.getAttribute("data-food-search") || "").toLowerCase();
+
+            if (searchValue === "" || searchableText.includes(searchValue)) {
+                card.style.display = "";
+                visibleCount++;
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        if (searchValue !== "") {
+            homeSearchClear.classList.add("show");
+            homeSearchResult.classList.add("show");
+
+            if (visibleCount === 0) {
+                homeSearchResultText.textContent =
+                    'No food found for "' + homeFoodSearch.value + '"';
+            } else {
+                homeSearchResultText.textContent =
+                    visibleCount + (visibleCount === 1
+                        ? " food found"
+                        : " foods found");
+            }
+        } else {
+            homeSearchClear.classList.remove("show");
+            homeSearchResult.classList.remove("show");
+        }
+
+        if (searchValue !== "" && visibleCount === 0) {
+            homeSearchEmpty.classList.add("show");
+        } else {
+            homeSearchEmpty.classList.remove("show");
+        }
+    }
+
+    if (homeFoodSearch) {
+        homeFoodSearch.addEventListener("input", searchHomeFood);
+
+        homeFoodSearch.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                const searchValue = homeFoodSearch.value.trim();
+
+                if (searchValue !== "") {
+                    sessionStorage.setItem("foodhubSearch", searchValue);
+                }
+
+                window.location.href = "/foods";
+            }
+
+            if (event.key === "Escape") {
+                homeFoodSearch.value = "";
+                searchHomeFood();
+            }
+        });
+    }
+
+    if (homeSearchClear) {
+        homeSearchClear.addEventListener("click", function () {
+            homeFoodSearch.value = "";
+            searchHomeFood();
+            homeFoodSearch.focus();
+        });
+    }
+</script>
+
+<!-- =========================================================
+     HERO BACKGROUND SLIDESHOW
+========================================================= -->
+<script>
+    const foodHubBackgrounds = [
+        "https://images.pexels.com/photos/39034206/pexels-photo-39034206.jpeg",
+        "https://images.pexels.com/photos/36963518/pexels-photo-36963518.jpeg",
+        "https://images.pexels.com/photos/20422129/pexels-photo-20422129.jpeg",
+        "https://images.pexels.com/photos/20422135/pexels-photo-20422135.jpeg"
+    ];
+
+    const hero = document.querySelector(".hero-background-slideshow");
+
+    if (hero) {
+        let index = 0;
+
+        function changeFoodHubBackground() {
+            hero.style.backgroundImage =
+                'linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url("' +
+                foodHubBackgrounds[index] + '")';
+
+            index = (index + 1) % foodHubBackgrounds.length;
+        }
+
+        changeFoodHubBackground();
+        setInterval(changeFoodHubBackground, 3000);
+    }
+</script>
 
 </body>
-
 </html>

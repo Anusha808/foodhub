@@ -1,0 +1,400 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #fffaf5;
+    color: #222;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    height: 72px;
+    background: #ffffff;
+    border-bottom: 1px solid #eeeeee;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 7%;
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    color: #ff6b00;
+
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.logo i {
+    font-size: 26px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: #444;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #ff6b00;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.cart-link {
+    position: relative;
+
+    color: #333;
+
+    font-size: 20px;
+
+    transition: 0.3s;
+}
+
+.cart-link:hover {
+    color: #ff6b00;
+}
+
+.profile-link {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    background: #ff6b00;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17px;
+}
+
+/* =========================
+   PROFILE SECTION
+========================= */
+
+.profile-section {
+    min-height: calc(100vh - 72px);
+
+    padding: 60px 20px 80px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.profile-container {
+    width: 100%;
+    max-width: 900px;
+}
+
+/* =========================
+   PROFILE HEADER
+========================= */
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.profile-avatar {
+    width: 95px;
+    height: 95px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    background: #fff1e6;
+    color: #ff6b00;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 40px;
+}
+
+.profile-header h1 {
+    font-size: 30px;
+    font-weight: 800;
+
+    color: #222;
+
+    margin-bottom: 8px;
+}
+
+.profile-header p {
+    color: #777;
+    font-size: 14px;
+}
+
+/* =========================
+   PROFILE CARD
+========================= */
+
+.profile-card {
+    background: white;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 20px;
+
+    padding: 35px;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.07);
+}
+
+.section-title {
+    font-size: 19px;
+    font-weight: 700;
+
+    color: #222;
+
+    margin-bottom: 22px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    color: #ff6b00;
+}
+
+/* =========================
+   INFORMATION GRID
+========================= */
+
+.info-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 18px;
+}
+
+.info-box {
+    border: 1px solid #eeeeee;
+
+    border-radius: 12px;
+
+    padding: 18px;
+
+    background: #fffdfb;
+}
+
+.info-label {
+    color: #888;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.info-label i {
+    color: #ff6b00;
+}
+
+.info-value {
+    color: #333;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    word-break: break-word;
+}
+
+/* =========================
+   ACCOUNT ACTIONS
+========================= */
+
+.actions {
+    margin-top: 35px;
+
+    padding-top: 30px;
+
+    border-top: 1px solid #eeeeee;
+}
+
+.action-buttons {
+    display: flex;
+
+    gap: 14px;
+
+    flex-wrap: wrap;
+}
+
+.btn {
+    min-width: 170px;
+
+    padding: 13px 20px;
+
+    border-radius: 10px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    transition: 0.3s;
+}
+
+.btn-primary {
+    background: #ff6b00;
+    color: white;
+
+    box-shadow:
+        0 6px 16px rgba(255, 107, 0, 0.22);
+}
+
+.btn-primary:hover {
+    background: #e85f00;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: white;
+
+    color: #333;
+
+    border: 1px solid #dddddd;
+}
+
+.btn-secondary:hover {
+    border-color: #ff6b00;
+    color: #ff6b00;
+
+    transform: translateY(-2px);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+    background: #1f1f1f;
+
+    color: #aaa;
+
+    text-align: center;
+
+    padding: 25px 20px;
+
+    font-size: 13px;
+}
+
+.footer strong {
+    color: #ff6b00;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    .navbar {
+        padding: 0 20px;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .profile-section {
+        padding: 40px 15px 60px;
+    }
+
+    .profile-card {
+        padding: 25px 20px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 450px) {
+
+    .logo {
+        font-size: 21px;
+    }
+
+    .logo i {
+        font-size: 22px;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+
+        font-size: 32px;
+    }
+
+    .profile-header h1 {
+        font-size: 24px;
+    }
+
+    .profile-card {
+        padding: 22px 16px;
+    }
+}

@@ -1,0 +1,882 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Feedback | FoodHub Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --orange: #ff6b35;
+            --orange-dark: #ed5421;
+            --dark: #202820;
+            --dark-soft: #2b352c;
+            --cream: #f8f5ef;
+            --white: #ffffff;
+            --text: #292f29;
+            --muted: #85877f;
+            --border: #eae5db;
+            --green: #497858;
+            --purple: #7c3aed;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 235px;
+            padding: 30px 17px 20px;
+            background: var(--dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: transform .3s;
+            overflow-y: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px;
+            margin-bottom: 44px;
+            color: white;
+        }
+
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+            flex-shrink: 0;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: var(--orange);
+            font-size: 21px;
+        }
+
+        .brand-name {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .brand-name span {
+            color: var(--orange);
+        }
+
+        .brand-subtitle {
+            color: #a7b0a5;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .nav-label {
+            color: #879187;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            padding: 0 14px;
+            margin-bottom: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 13px 14px;
+            border-radius: 11px;
+            color: #c4ccc2;
+            font-size: 13px;
+            transition: .2s;
+        }
+
+        .nav-links a i {
+            width: 19px;
+            text-align: center;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            background: var(--dark-soft);
+        }
+
+        .nav-links a.active {
+            border-left: 3px solid var(--orange);
+            padding-left: 11px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 25px;
+        }
+
+        .sidebar-note {
+            background: #303c31;
+            border-radius: 13px;
+            padding: 17px;
+            margin: 0 5px 20px;
+        }
+
+        .sidebar-note i {
+            color: #f5ad66;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-note h4 {
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .sidebar-note p {
+            color: #b6c0b4;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .logout-link {
+            display: flex;
+            gap: 13px;
+            align-items: center;
+            padding: 15px 14px;
+            color: #f1b0a0;
+            border-top: 1px solid #3b443b;
+            font-size: 13px;
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            margin-left: 235px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            min-height: 77px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 35px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .breadcrumb strong {
+            color: var(--text);
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-avatar {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #f9dfce;
+            color: #bd572b;
+            display: grid;
+            place-items: center;
+        }
+
+        .profile-name {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .profile-role {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .menu-toggle {
+            display: none;
+            border: none;
+            background: transparent;
+            font-size: 21px;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .content {
+            max-width: 1500px;
+            margin: auto;
+            padding: 34px;
+        }
+
+        .eyebrow {
+            color: var(--orange-dark);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.7px;
+            margin-bottom: 13px;
+        }
+
+        .page-heading {
+            margin-bottom: 28px;
+        }
+
+        .page-heading h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(27px, 4vw, 36px);
+            margin-bottom: 9px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* WELCOME BANNER */
+        .banner {
+            margin: 25px 0 28px;
+            padding: 25px 30px;
+            border: 1px solid #f5e4d5;
+            border-radius: 15px;
+            background: linear-gradient(110deg, #fff0e4, #fffaf5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .banner h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            margin-bottom: 9px;
+        }
+
+        .banner p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .banner-icon {
+            width: 70px;
+            height: 70px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 19px;
+            background: white;
+            color: var(--orange);
+            font-size: 30px;
+            box-shadow: 0 5px 20px #b95b2010;
+        }
+
+        /* STATISTICS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 22px;
+            box-shadow: 0 5px 18px rgba(41, 37, 36, 0.035);
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(41, 37, 36, 0.07);
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 16px;
+            background: #fff0e5;
+            color: var(--orange);
+            font-size: 19px;
+        }
+
+        .stat-icon.purple {
+            background: #f3e8ff;
+            color: var(--purple);
+        }
+
+        .stat-icon.green {
+            background: #dcfce7;
+            color: var(--green);
+        }
+
+        .stat-card h2 {
+            font-size: 27px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* FEEDBACK LIST */
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .section-heading h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+        }
+
+        .feedback-count {
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: #fff0e5;
+            color: #d65b24;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .feedback-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .feedback-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 23px;
+            box-shadow: 0 5px 18px rgba(41, 37, 36, 0.035);
+            transition: box-shadow .2s;
+        }
+
+        .feedback-card:hover {
+            box-shadow: 0 8px 24px rgba(41, 37, 36, 0.07);
+        }
+
+        .feedback-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .customer-avatar {
+            width: 45px;
+            height: 45px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #fff0e5;
+            color: var(--orange);
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+
+        .customer-info h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            overflow-wrap: anywhere;
+        }
+
+        .customer-info p,
+        .feedback-date {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .type-badge {
+            padding: 7px 11px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+
+        .type-order {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .type-general {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .rating {
+            color: #f59e0b;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+
+        .comment {
+            font-size: 13px;
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .feedback-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-top: 1px solid var(--border);
+            margin-top: 18px;
+            padding-top: 14px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .feedback-meta strong {
+            color: var(--text);
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            background: var(--white);
+            border: 1px dashed #e7d8ca;
+            border-radius: 15px;
+            text-align: center;
+            padding: 55px 20px;
+        }
+
+        .empty-state i {
+            color: #d6c4b5;
+            font-size: 44px;
+            margin-bottom: 18px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .footer {
+            margin-top: 32px;
+            padding: 22px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1150px) {
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .content {
+                padding: 27px;
+            }
+
+            .topbar {
+                padding: 15px 27px;
+            }
+        }
+
+        @media (max-width: 750px) {
+            .sidebar {
+                transform: translateX(-100%);
+                box-shadow: 10px 0 35px #00000020;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .topbar {
+                padding: 15px 18px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .breadcrumb {
+                margin-right: auto;
+            }
+
+            .content {
+                padding: 24px 16px;
+            }
+
+            .banner {
+                padding: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .banner-icon {
+                display: none;
+            }
+
+            .page-heading h1 {
+                font-size: 27px;
+            }
+
+            .feedback-card {
+                padding: 17px;
+            }
+
+            .feedback-meta {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .profile-name {
+                max-width: 110px;
+                overflow-wrap: anywhere;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ADMIN SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <a th:href="@{/admin/dashboard}" class="brand">
+        <div class="brand-icon">
+            <i class="fa-solid fa-utensils"></i>
+        </div>
+
+        <div>
+            <div class="brand-name">Food<span>Hub</span></div>
+            <div class="brand-subtitle">RESTAURANT CONTROL CENTER</div>
+        </div>
+    </a>
+
+    <div class="nav-label">WORKSPACE</div>
+
+    <nav class="nav-links">
+
+        <a th:href="@{/admin/dashboard}">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a th:href="@{/admin/foods}">
+            <i class="fa-solid fa-burger"></i>
+            <span>Food Catalogue</span>
+        </a>
+
+        <a th:href="@{/admin/categories}">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Categories</span>
+        </a>
+
+        <a th:href="@{/admin/orders}">
+            <i class="fa-solid fa-receipt"></i>
+            <span>Order Management</span>
+        </a>
+
+        <a th:href="@{/admin/users}">
+            <i class="fa-solid fa-user-group"></i>
+            <span>Customers</span>
+        </a>
+
+        <a th:href="@{/admin/feedback}" class="active">
+            <i class="fa-solid fa-comments"></i>
+            <span>Customer Feedback</span>
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="sidebar-note">
+            <i class="fa-solid fa-lightbulb"></i>
+            <h4>Customer voices matter!</h4>
+            <p>Review customer ratings and comments to help improve the FoodHub experience.</p>
+        </div>
+
+        <a th:href="@{/admin/logout}" class="logout-link">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            Sign out
+        </a>
+
+    </div>
+</aside>
+
+<!-- MAIN PAGE -->
+<div class="main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+
+        <button class="menu-toggle"
+                type="button"
+                onclick="toggleSidebar()"
+                aria-label="Toggle sidebar">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="breadcrumb">
+            FoodHub
+            <span style="padding: 0 8px;">/</span>
+            <strong>Customer Feedback</strong>
+        </div>
+
+        <div class="profile">
+            <div class="profile-avatar">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div>
+                <div class="profile-name"
+                     th:text="${adminName ?: 'FoodHub Admin'}">
+                    FoodHub Admin
+                </div>
+                <div class="profile-role">Administrator</div>
+            </div>
+        </div>
+
+    </header>
+
+    <main class="content">
+
+        <div class="eyebrow">CUSTOMER EXPERIENCE</div>
+
+        <section class="page-heading">
+            <h1>Customer Feedback</h1>
+            <p>Review customer ratings, comments, and feedback about FoodHub.</p>
+        </section>
+
+        <section class="banner">
+            <div>
+                <h2>Your customers, your improvement.</h2>
+                <p>
+                    View customer reviews, monitor ratings, and understand how
+                    customers feel about their FoodHub ordering experience.
+                </p>
+            </div>
+
+            <div class="banner-icon">
+                <i class="fa-solid fa-comments"></i>
+            </div>
+        </section>
+
+        <!-- FEEDBACK STATISTICS -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <h2 th:text="${totalFeedback}">0</h2>
+                <p>Total Feedback</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                </div>
+                <h2 th:text="${orderFeedback}">0</h2>
+                <p>Order Feedback</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <i class="fa-solid fa-message"></i>
+                </div>
+                <h2 th:text="${generalFeedback}">0</h2>
+                <p>General Feedback</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <h2>
+                    <span th:text="${#numbers.formatDecimal(averageRating, 1, 1)}">0.0</span>
+                    <small style="font-size: 13px; color: #85877f;">/ 5</small>
+                </h2>
+                <p>Average Rating</p>
+            </div>
+
+        </section>
+
+        <!-- CUSTOMER REVIEWS -->
+        <section>
+
+            <div class="section-heading">
+                <h2>All Customer Reviews</h2>
+                <span class="feedback-count">
+                    <span th:text="${totalFeedback}">0</span> reviews
+                </span>
+            </div>
+
+            <div class="empty-state"
+                 th:if="${#lists.isEmpty(feedbackList)}">
+
+                <i class="fa-regular fa-comments"></i>
+                <h3>No feedback yet</h3>
+                <p>
+                    Customer feedback will appear here after customers
+                    submit their reviews.
+                </p>
+            </div>
+
+            <div class="feedback-list"
+                 th:unless="${#lists.isEmpty(feedbackList)}">
+
+                <article class="feedback-card"
+                         th:each="feedback : ${feedbackList}">
+
+                    <div class="feedback-top">
+
+                        <div class="customer-info">
+                            <div class="customer-avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+
+                            <div>
+                                <!-- REGISTERED CUSTOMER NAME -->
+                                <h3 th:text="${customerNames.get(feedback.userId) ?: 'Unknown Customer'}">
+                                    Customer Name
+                                </h3>
+
+                                <p th:text="${feedback.createdAt != null ? #temporals.format(feedback.createdAt, 'dd MMM yyyy, hh:mm a') : 'Date unavailable'}">
+                                    Date unavailable
+                                </p>
+                            </div>
+                        </div>
+
+                        <span class="type-badge"
+                              th:classappend="${feedback.feedbackType == 'ORDER'} ? ' type-order' : ' type-general'"
+                              th:text="${feedback.feedbackType == 'ORDER'} ? 'ORDER FEEDBACK' : 'GENERAL FEEDBACK'">
+                            GENERAL FEEDBACK
+                        </span>
+
+                    </div>
+
+                    <!-- STAR RATING -->
+                    <div class="rating" aria-label="Customer rating">
+                        <span th:each="star : ${#numbers.sequence(1, 5)}"
+                              th:text="${star <= feedback.rating ? '★' : '☆'}">★</span>
+
+                        <span style="color: #85877f; letter-spacing: 0; font-size: 12px;"
+                              th:text="${feedback.rating} + ' / 5'">5 / 5</span>
+                    </div>
+
+                    <!-- CUSTOMER COMMENT -->
+                    <p class="comment"
+                       th:text="${feedback.comment}">
+                        Customer comment
+                    </p>
+
+                    <!-- FEEDBACK DETAILS -->
+                    <div class="feedback-meta">
+
+                        <span>
+                            <i class="fa-solid fa-hashtag"></i>
+                            Feedback ID:
+                            <strong th:text="${feedback.id}">1</strong>
+                        </span>
+
+                        <span th:if="${feedback.orderId != null}">
+                            <i class="fa-solid fa-receipt"></i>
+                            Order ID:
+                            <strong th:text="${feedback.orderId}">1</strong>
+                        </span>
+
+                        <span th:if="${feedback.orderId == null}">
+                            <i class="fa-solid fa-comment-dots"></i>
+                            General review
+                        </span>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+        <footer class="footer">
+            © 2026 FoodHub · Online Food Ordering and Management System
+        </footer>
+
+    </main>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+    }
+</script>
+
+</body>
+</html>

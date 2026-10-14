@@ -1,3 +1,4 @@
+
 package com.foodhub.controller;
 
 import com.foodhub.model.User;
@@ -9,198 +10,169 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HomeController {
 
-    // =====================================================
-    // USER REPOSITORY
-    // =====================================================
-
     private final UserRepository userRepository;
-
-
-    // =====================================================
-    // PASSWORD ENCODER
-    // =====================================================
 
     private final BCryptPasswordEncoder passwordEncoder =
             new BCryptPasswordEncoder();
 
-
-    // =====================================================
-    // CONSTRUCTOR
-    // =====================================================
-
     public HomeController(UserRepository userRepository) {
-
         this.userRepository = userRepository;
     }
 
-
-    // =====================================================
     // HOME PAGE
-    // =====================================================
-
     @GetMapping("/")
-    public String home(
-            HttpSession session,
-            Model model) {
-
-        // Get logged-in user's name from session
-        String userName =
-                (String) session.getAttribute("userName");
-
-        // Send username to home.html
+    public String home(HttpSession session, Model model) {
         model.addAttribute(
                 "userName",
-                userName
+                session.getAttribute("userName")
         );
-
         return "home";
     }
 
-
-    // =====================================================
-    // REGISTER PAGE
-    // =====================================================
-
+    // CUSTOMER REGISTRATION PAGE
     @GetMapping("/register")
     public String register() {
-
         return "register";
     }
 
-
-    // =====================================================
-    // LOGIN PAGE
-    // =====================================================
-
+    // CUSTOMER LOGIN PAGE
     @GetMapping("/login")
     public String login() {
-
         return "login";
     }
 
-
-    // =====================================================
-    // REGISTER USER
-    // =====================================================
-
+    // REGISTER CUSTOMER
     @PostMapping("/register")
-    @ResponseBody
     public String registerUser(
-            @RequestBody User user) {
+            @ModelAttribute User user,
+            @RequestParam(
+                    name = "confirmPassword",
+                    required = false
+            ) String confirmPassword,
+            @RequestParam(
+                    name = "terms",
+                    required = false
+            ) String terms,
+            Model model) {
 
-        // Check whether email already exists
-        if (userRepository.existsByEmail(user.getEmail())) {
+        // Validate required fields
+        if (user.getEmail() == null
+                || user.getEmail().isBlank()
+                || user.getPassword() == null
+                || user.getPassword().isBlank()) {
 
-            return "Email is already registered.";
+            model.addAttribute("error", "Please complete all required fields.");
+            return "register";
         }
 
-        // Set default role
+        // Validate password confirmation
+        if (confirmPassword == null
+                || !user.getPassword().equals(confirmPassword)) {
+
+            model.addAttribute("error", "Passwords do not match.");
+            return "register";
+        }
+
+        // Validate terms acceptance
+        if (terms == null) {
+            model.addAttribute(
+                    "error",
+                    "Please accept the Terms & Conditions."
+            );
+            return "register";
+        }
+
+        // Check duplicate email
+        if (userRepository.existsByEmail(user.getEmail())) {
+            model.addAttribute(
+                    "error",
+                    "Email is already registered."
+            );
+            return "register";
+        }
+
+        // Create a customer account
         user.setRole("USER");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Encrypt password
-        String encryptedPassword =
-                passwordEncoder.encode(
-                        user.getPassword()
-                );
-
-        // Store encrypted password
-        user.setPassword(encryptedPassword);
-
-        // Save user
         userRepository.save(user);
 
-        return "Registration successful!";
+        return "redirect:/login?registered";
     }
 
-
-    // =====================================================
-    // LOGIN USER
-    // =====================================================
-
+    // CUSTOMER LOGIN
     @PostMapping("/login")
-    @ResponseBody
     public String loginUser(
-            @RequestBody User user,
-            HttpSession session) {
+            @ModelAttribute User user,
+            HttpSession session,
+            Model model) {
 
-        // Find user using email
-        User existingUser =
-                userRepository
-                        .findByEmail(user.getEmail())
-                        .orElse(null);
+        if (user.getEmail() == null
+                || user.getPassword() == null) {
 
-
-        // User not found
-        if (existingUser == null) {
-
-            return "Invalid email or password.";
+            model.addAttribute(
+                    "error",
+                    "Please enter your email and password."
+            );
+            return "login";
         }
 
+        User existingUser = userRepository
+                .findByEmail(user.getEmail())
+                .orElse(null);
 
-        // Check password
-        boolean passwordMatches =
-                passwordEncoder.matches(
+        // Validate customer credentials
+        if (existingUser == null
+                || existingUser.getPassword() == null
+                || !passwordEncoder.matches(
                         user.getPassword(),
-                        existingUser.getPassword()
-                );
+                        existingUser.getPassword())) {
 
-
-        // Password incorrect
-        if (!passwordMatches) {
-
-            return "Invalid email or password.";
+            model.addAttribute(
+                    "error",
+                    "Invalid email or password."
+            );
+            return "login";
         }
 
+        // Admins must use the admin login page
+        if ("ADMIN".equalsIgnoreCase(existingUser.getRole())) {
+            model.addAttribute(
+                    "error",
+                    "Please use the Admin Login page."
+            );
+            return "login";
+        }
 
-        // =================================================
-        // LOGIN SUCCESSFUL
-        // SAVE USER DATA IN SESSION
-        // =================================================
+        // Store customer session
+        session.setAttribute("userId", existingUser.getId());
+        session.setAttribute("userName", existingUser.getName());
+        session.setAttribute("userEmail", existingUser.getEmail());
+        session.setAttribute("userRole", existingUser.getRole());
 
-        session.setAttribute(
-                "userId",
-                existingUser.getId()
-        );
-
-        session.setAttribute(
-                "userName",
-                existingUser.getName()
-        );
-
-        session.setAttribute(
-                "userEmail",
-                existingUser.getEmail()
-        );
-
-        session.setAttribute(
-                "userRole",
-                existingUser.getRole()
-        );
-
-
-        return "Login successful!";
+        return "redirect:/foods";
     }
 
-
-    // =====================================================
-    // LOGOUT
-    // =====================================================
-
+    // CUSTOMER LOGOUT
     @GetMapping("/logout")
-    public String logout(
-            HttpSession session) {
-
-        // Destroy session
+    public String logout(HttpSession session) {
         session.invalidate();
-
-        // Return to home page
         return "redirect:/";
+    }
+
+    // TEMPORARY PASSWORD HASH GENERATOR
+    // Remove this endpoint after updating the admin password.
+    @GetMapping("/generate-password")
+    @ResponseBody
+    public String generatePassword() {
+        return passwordEncoder.encode("admin123");
     }
 }

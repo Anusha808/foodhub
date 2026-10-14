@@ -2,503 +2,439 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <title>My Cart | FoodHub</title>
 
-    <title>Shopping Cart | FoodHub</title>
+    <link rel="stylesheet" th:href="@{/css/cart.css}">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <link rel="stylesheet"
-          th:href="@{/css/cart.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
 </head>
 
 <body>
 
-
-<!-- ================= NAVBAR ================= -->
-
-<header class="navbar">
-
+<!-- Navigation Bar -->
+<nav class="navbar">
     <div class="nav-container">
 
-        <a href="/" class="logo">
-
-            <span class="logo-icon">
-                <i class="fa-solid fa-utensils"></i>
-            </span>
-
-            FoodHub
-
+        <a th:href="@{/}" class="logo">
+            <i class="fa-solid fa-utensils"></i>
+            <span>Food<span class="logo-highlight">Hub</span></span>
         </a>
 
+        <div class="nav-links">
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/foods}">Menu</a>
 
-        <nav class="nav-links">
-
-            <a href="/">
-                Home
+            <a th:href="@{/cart}" class="active">
+                <i class="fa-solid fa-cart-shopping"></i>
+                Cart
+                <span class="cart-badge"
+                      th:if="${cartCount != null and cartCount > 0}"
+                      th:text="${cartCount}">0</span>
             </a>
 
-            <a href="/foods">
-                Food Menu
-            </a>
-
-            <a href="/#categories">
-                Categories
-            </a>
-
-            <a href="/#about">
-                About
-            </a>
-
-        </nav>
-
+            <a th:href="@{/orders}">My Orders</a>
+        </div>
 
         <div class="nav-actions">
-
-            <a href="/cart"
-               class="cart-link active-cart"
-               title="Shopping Cart">
-
-                <i class="fa-solid fa-cart-shopping"></i>
-
-                <span class="cart-count"
-                      th:text="${cartCount}">
-                    0
-                </span>
-
+            <a th:href="@{/foods}" class="nav-order-btn">
+                <i class="fa-solid fa-bowl-food"></i>
+                Order Food
             </a>
-
-
-            <a href="/login"
-               class="login-btn">
-
-                Login
-
-            </a>
-
         </div>
 
     </div>
+</nav>
 
-</header>
 
+<!-- Cart Page -->
+<main class="cart-page">
 
-<!-- ================= PAGE HEADER ================= -->
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="page-header-content">
 
-<section class="page-header">
+            <span class="section-label">
+                <i class="fa-solid fa-basket-shopping"></i>
+                YOUR SELECTION
+            </span>
 
-    <div class="page-header-content">
+            <h1>My <span>Cart</span></h1>
 
-        <span class="page-label">
+            <p>Review your delicious choices before checking out.</p>
 
+        </div>
+
+        <div class="header-icon">
             <i class="fa-solid fa-cart-shopping"></i>
-
-            YOUR CART
-
-        </span>
+        </div>
+    </section>
 
 
-        <h1>
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a th:href="@{/}">
+            <i class="fa-solid fa-house"></i> Home
+        </a>
 
-            Your Shopping
-            <span>Cart</span>
+        <i class="fa-solid fa-chevron-right"></i>
 
-        </h1>
+        <a th:href="@{/foods}">Menu</a>
 
+        <i class="fa-solid fa-chevron-right"></i>
 
-        <p>
-
-            Review your selected food items before
-            placing your order.
-
-        </p>
-
+        <span>My Cart</span>
     </div>
 
-</section>
 
-
-<!-- ================= CART SECTION ================= -->
-
-<main class="cart-section">
-
-    <div class="cart-container">
-
-
-        <!-- ================= EMPTY CART ================= -->
-
-        <div class="empty-cart"
+    <!-- Empty Cart -->
+    <section class="empty-cart"
              th:if="${cartCount == 0}">
 
-            <div class="empty-cart-icon">
+        <div class="empty-cart-icon">
+            <i class="fa-solid fa-cart-shopping"></i>
 
-                <i class="fa-solid fa-cart-shopping"></i>
+            <span class="empty-icon-circle">
+                <i class="fa-solid fa-plus"></i>
+            </span>
+        </div>
 
+        <h2>Your cart is empty!</h2>
+
+        <p>
+            Looks like you haven't added anything delicious yet.
+            Explore our menu and find something you love.
+        </p>
+
+        <a th:href="@{/foods}" class="primary-btn">
+            <i class="fa-solid fa-utensils"></i>
+            Explore Menu
+        </a>
+
+        <div class="empty-cart-decoration decoration-one">
+            <i class="fa-solid fa-pizza-slice"></i>
+        </div>
+
+        <div class="empty-cart-decoration decoration-two">
+            <i class="fa-solid fa-burger"></i>
+        </div>
+
+        <div class="empty-cart-decoration decoration-three">
+            <i class="fa-solid fa-ice-cream"></i>
+        </div>
+
+    </section>
+
+
+    <!-- Cart Items and Summary -->
+    <section class="cart-layout"
+             th:if="${cartCount > 0}">
+
+        <!-- Cart Items Section -->
+        <div class="cart-items-section">
+
+            <div class="cart-section-heading">
+                <div>
+                    <h2>Cart Items</h2>
+
+                    <p>
+                        <span th:text="${cartCount}">0</span>
+                        item(s) selected
+                    </p>
+                </div>
+
+                <a th:href="@{/foods}" class="continue-link">
+                    <i class="fa-solid fa-plus"></i>
+                    Add More Items
+                </a>
             </div>
 
 
-            <h2>
+            <!-- Each Cart Item -->
+            <div class="cart-items-list">
 
-                Your cart is empty
+                <article class="cart-item"
+                         th:each="item : ${cartItems}">
 
-            </h2>
-
-
-            <p>
-
-                You haven't added any food items
-                to your cart yet.
-
-            </p>
-
-
-            <a href="/foods"
-               class="browse-btn">
-
-                <i class="fa-solid fa-utensils"></i>
-
-                Browse Food
-
-            </a>
-
-        </div>
-
-
-        <!-- ================= CART CONTENT ================= -->
-
-        <div class="cart-content"
-             th:if="${cartCount > 0}">
-
-
-            <!-- ================= CART ITEMS ================= -->
-
-            <div class="cart-items">
-
-
-                <!-- ================= CART ITEM ================= -->
-
-                <div class="cart-item"
-                     th:each="item : ${cartItems}">
-
-
-                    <!-- ================= FOOD IMAGE ================= -->
-
+                    <!-- Dynamic Food Image -->
                     <div class="cart-item-image">
 
-                        <img th:src="${item.food.image}"
-                             th:alt="${item.food.name}">
+                        <img
+                            th:if="${item.food.image != null
+                                    and !#strings.isEmpty(item.food.image)}"
+
+                            th:src="${#strings.startsWith(item.food.image, 'http')
+                                    ? item.food.image
+                                    : '/images/foods/' + item.food.image}"
+
+                            th:alt="${item.food.name}"
+                            loading="lazy"
+
+                            onerror="this.onerror=null;
+                                     this.src='https://placehold.co/300x220/fff0e5/ff6b00?text=FoodHub';">
+
+
+                        <!-- Fallback if the food has no image -->
+                        <img
+                            th:unless="${item.food.image != null
+                                        and !#strings.isEmpty(item.food.image)}"
+
+                            src="https://placehold.co/300x220/fff0e5/ff6b00?text=FoodHub"
+
+                            th:alt="${item.food.name}"
+                            loading="lazy">
 
                     </div>
 
 
-                    <!-- ================= FOOD DETAILS ================= -->
-
+                    <!-- Food Information -->
                     <div class="cart-item-details">
+
+                        <div class="food-category">
+                            <i class="fa-solid fa-utensils"></i>
+                            Fresh &amp; Delicious
+                        </div>
 
                         <h3 th:text="${item.food.name}">
                             Food Name
                         </h3>
 
-
-                        <p class="food-category"
-                           th:text="${item.food.category}">
-                            Category
+                        <p class="food-description"
+                           th:if="${item.food.description != null
+                                   and !#strings.isEmpty(item.food.description)}"
+                           th:text="${item.food.description}">
+                            Food description
                         </p>
 
 
-                        <p class="food-price">
+                        <!-- Unit Price -->
+                        <div class="food-price">
+                            <span>Price</span>
 
-                            ₹<span
-                                th:text="${item.food.price}">
-                                0.00
-                            </span>
-
-                        </p>
-
-                    </div>
-
-
-                    <!-- ================= QUANTITY ================= -->
-
-                    <div class="quantity-section">
-
-                        <span class="quantity-label">
-                            Quantity
-                        </span>
+                            <strong>
+                                ₹<span th:text="${#numbers.formatDecimal(item.food.price, 1, 2)}">
+                                    0.00
+                                </span>
+                            </strong>
+                        </div>
 
 
-                        <div class="quantity-controls">
+                        <!-- Quantity and Remove Controls -->
+                        <div class="cart-item-bottom">
+
+                            <div class="quantity-control">
+
+                                <form th:action="@{/cart/decrease/{id}(id=${item.id})}"
+                                      method="post">
+
+                                    <button type="submit"
+                                            class="quantity-btn"
+                                            aria-label="Decrease quantity">
+
+                                        <i class="fa-solid fa-minus"></i>
+
+                                    </button>
+                                </form>
 
 
-                            <!-- DECREASE -->
+                                <span class="quantity-value"
+                                      th:text="${item.quantity}">
+                                    1
+                                </span>
 
-                            <form th:action="@{/cart/decrease/{id}(id=${item.id})}"
+
+                                <form th:action="@{/cart/increase/{id}(id=${item.id})}"
+                                      method="post">
+
+                                    <button type="submit"
+                                            class="quantity-btn"
+                                            aria-label="Increase quantity">
+
+                                        <i class="fa-solid fa-plus"></i>
+
+                                    </button>
+                                </form>
+
+                            </div>
+
+
+                            <!-- Remove Item -->
+                            <form th:action="@{/cart/remove/{id}(id=${item.id})}"
                                   method="post">
 
-                                <button type="submit"
-                                        class="quantity-btn">
-
-                                    <i class="fa-solid fa-minus"></i>
-
+                                <button type="submit" class="remove-btn">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                    Remove
                                 </button>
 
                             </form>
-
-
-                            <!-- CURRENT QUANTITY -->
-
-                            <span class="quantity"
-                                  th:text="${item.quantity}">
-                                1
-                            </span>
-
-
-                            <!-- INCREASE -->
-
-                            <form th:action="@{/cart/increase/{id}(id=${item.id})}"
-                                  method="post">
-
-                                <button type="submit"
-                                        class="quantity-btn">
-
-                                    <i class="fa-solid fa-plus"></i>
-
-                                </button>
-
-                            </form>
-
 
                         </div>
 
                     </div>
 
 
-                    <!-- ================= ITEM TOTAL ================= -->
+                    <!-- Dynamic Item Subtotal -->
+                    <div class="cart-item-subtotal">
 
-                    <div class="item-total">
-
-                        <span class="total-label">
-                            Total
-                        </span>
+                        <span>Subtotal</span>
 
                         <strong>
-
-                            ₹<span
-                                th:text="${item.totalPrice}">
+                            ₹<span th:text="${#numbers.formatDecimal(item.food.price * item.quantity, 1, 2)}">
                                 0.00
                             </span>
-
                         </strong>
 
                     </div>
 
-
-                    <!-- ================= REMOVE ================= -->
-
-                    <form th:action="@{/cart/remove/{id}(id=${item.id})}"
-                          method="post">
-
-                        <button type="submit"
-                                class="remove-btn"
-                                title="Remove Item">
-
-                            <i class="fa-solid fa-trash"></i>
-
-                        </button>
-
-                    </form>
-
-
-                </div>
+                </article>
 
             </div>
 
 
-            <!-- ================= CART SUMMARY ================= -->
-
-            <div class="cart-summary">
-
-
-                <h3>
-
-                    Order Summary
-
-                </h3>
-
-
-                <!-- ITEMS -->
-
-                <div class="summary-row">
-
-                    <span>
-                        Items
-                    </span>
-
-                    <span th:text="${cartCount}">
-                        0
-                    </span>
-
-                </div>
-
-
-                <!-- DIVIDER -->
-
-                <div class="summary-divider"></div>
-
-
-                <!-- TOTAL -->
-
-                <div class="summary-row total-row">
-
-                    <span>
-                        Total
-                    </span>
-
-                    <strong>
-
-                        ₹<span th:text="${cartTotal}">
-                            0.00
-                        </span>
-
-                    </strong>
-
-                </div>
-
-
-                <!-- ================= PROCEED TO CHECKOUT ================= -->
-
-                <a href="/checkout"
-                   class="checkout-btn">
-
-                    Proceed to Checkout
-
-                    <i class="fa-solid fa-arrow-right"></i>
-
-                </a>
-
-
-                <!-- CONTINUE SHOPPING -->
-
-                <a href="/foods"
-                   class="continue-shopping">
-
-                    <i class="fa-solid fa-arrow-left"></i>
-
-                    Continue Shopping
-
-                </a>
-
-
-            </div>
+            <!-- Continue Shopping -->
+            <a th:href="@{/foods}" class="back-to-menu">
+                <i class="fa-solid fa-arrow-left"></i>
+                Continue Shopping
+            </a>
 
         </div>
 
-    </div>
+
+        <!-- Order Summary -->
+        <aside class="order-summary">
+
+            <div class="summary-header">
+
+                <div class="summary-icon">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+
+                <div>
+                    <h2>Order Summary</h2>
+                    <p>Review your order</p>
+                </div>
+
+            </div>
+
+
+            <!-- Summary Details -->
+            <div class="summary-items">
+
+                <div class="summary-row">
+                    <span>Items</span>
+                    <strong th:text="${cartCount}">0</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+
+                    <strong>
+                        ₹<span th:text="${#numbers.formatDecimal(cartTotal, 1, 2)}">
+                            0.00
+                        </span>
+                    </strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <strong class="free-delivery">FREE</strong>
+                </div>
+
+            </div>
+
+
+            <div class="summary-divider"></div>
+
+
+            <!-- Total -->
+            <div class="summary-total">
+                <span>Total Amount</span>
+
+                <strong>
+                    ₹<span th:text="${#numbers.formatDecimal(cartTotal, 1, 2)}">
+                        0.00
+                    </span>
+                </strong>
+            </div>
+
+
+            <!-- Delivery Note -->
+            <div class="delivery-note">
+                <i class="fa-solid fa-truck-fast"></i>
+
+                <p>
+                    <strong>Free delivery!</strong>
+                    Your delicious food is almost on its way.
+                </p>
+            </div>
+
+
+            <!-- Checkout -->
+            <a th:href="@{/checkout}" class="checkout-btn">
+                Proceed to Checkout
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+
+            <div class="secure-checkout">
+                <i class="fa-solid fa-shield-halved"></i>
+                Secure checkout
+            </div>
+
+
+            <!-- Payment Methods -->
+            <div class="payment-methods">
+                <span>We accept</span>
+
+                <div class="payment-icons">
+                    <i class="fa-brands fa-cc-visa" title="Visa"></i>
+                    <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+                    <i class="fa-solid fa-money-bill-wave" title="Cash"></i>
+                </div>
+            </div>
+
+        </aside>
+
+    </section>
 
 </main>
 
 
-<!-- ================= FOOTER ================= -->
-
+<!-- Footer -->
 <footer class="footer">
 
     <div class="footer-container">
 
+        <a th:href="@{/}" class="footer-logo">
+            <i class="fa-solid fa-utensils"></i>
+            Food<span>Hub</span>
+        </a>
 
-        <!-- ================= FOOTER BRAND ================= -->
-
-        <div class="footer-brand">
-
-            <a href="/" class="logo">
-
-                <span class="logo-icon">
-
-                    <i class="fa-solid fa-utensils"></i>
-
-                </span>
-
-                FoodHub
-
-            </a>
-
-
-            <p>
-
-                Delicious food delivered straight
-                to your doorstep.
-
-            </p>
-
-        </div>
-
-
-        <!-- ================= QUICK LINKS ================= -->
+        <p>Delicious food, delivered with love.</p>
 
         <div class="footer-links">
-
-            <h4>
-                Quick Links
-            </h4>
-
-            <a href="/">
-                Home
-            </a>
-
-            <a href="/foods">
-                Food Menu
-            </a>
-
-            <a href="/cart">
-                Cart
-            </a>
-
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/foods}">Menu</a>
+            <a th:href="@{/orders}">My Orders</a>
         </div>
 
-
-        <!-- ================= ACCOUNT ================= -->
-
-        <div class="footer-links">
-
-            <h4>
-                Account
-            </h4>
-
-            <a href="/login">
-                Login
-            </a>
-
-            <a href="/register">
-                Register
-            </a>
-
+        <div class="footer-bottom">
+            <p>&copy; 2026 FoodHub. All rights reserved.</p>
         </div>
-
-
-    </div>
-
-
-    <!-- ================= FOOTER BOTTOM ================= -->
-
-    <div class="footer-bottom">
-
-        <p>
-
-            © 2026 FoodHub.
-            All Rights Reserved.
-
-        </p>
 
     </div>
 
 </footer>
 
-
 </body>
-
 </html>
