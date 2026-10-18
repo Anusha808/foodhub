@@ -89,7 +89,7 @@ public class Food {
         this.image = image;
     }
 
-    public int getStock() {
+    public int getStock() { 
         return stock;
     }
 

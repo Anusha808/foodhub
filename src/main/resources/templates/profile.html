@@ -1,22 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>My Profile - FoodHub</title>
 
-    <!-- Google Font -->
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
@@ -26,104 +20,70 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Profile CSS -->
-    <link rel="stylesheet"
-          th:href="@{/css/profile.css}">
-
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
 </head>
-
 
 <body>
 
-
-<!-- =========================
-     NAVBAR
-========================= -->
-
+<!-- NAVBAR -->
 <header class="navbar">
 
     <!-- LOGO -->
-    <a href="/foods"
-       class="logo">
-
+    <a th:href="@{/foods}" class="logo">
         <i class="fa-solid fa-utensils"></i>
-
         FoodHub
-
     </a>
-
 
     <!-- NAVIGATION -->
     <nav class="nav-links">
-
-        <a href="/home">
+        <!-- FIXED: Home now opens the existing food menu -->
+        <a th:href="@{/foods}">
             Home
         </a>
 
-        <a href="/foods">
+        <a th:href="@{/foods}">
             Food Menu
         </a>
 
-        <a href="/cart">
+        <a th:href="@{/cart}">
             Cart
         </a>
 
-        <a href="/orders">
+        <a th:href="@{/orders}">
             My Orders
         </a>
-
     </nav>
-
 
     <!-- RIGHT SIDE -->
     <div class="nav-right">
 
-        <!-- CART -->
-        <a href="/cart"
-           class="cart-link">
-
+        <a th:href="@{/cart}" class="cart-link" aria-label="View cart">
             <i class="fa-solid fa-cart-shopping"></i>
-
         </a>
 
-
-        <!-- PROFILE -->
-        <a href="/profile"
-           class="profile-link">
-
+        <a th:href="@{/profile}"
+           class="profile-link"
+           aria-label="My profile">
             <i class="fa-solid fa-user"></i>
-
         </a>
 
     </div>
 
 </header>
 
-
-
-<!-- =========================
-     PROFILE SECTION
-========================= -->
-
+<!-- PROFILE SECTION -->
 <main class="profile-section">
 
     <div class="profile-container">
 
-
         <!-- PROFILE HEADER -->
-
         <div class="profile-header">
 
             <div class="profile-avatar">
-
                 <i class="fa-solid fa-user"></i>
-
             </div>
 
-
-            <h1>
-                My Profile
-            </h1>
-
+            <h1>My Profile</h1>
 
             <p>
                 Manage and view your FoodHub account information
@@ -131,213 +91,113 @@
 
         </div>
 
-
-
         <!-- PROFILE CARD -->
-
         <div class="profile-card">
 
-
             <!-- PERSONAL INFORMATION -->
-
             <h2 class="section-title">
-
                 <i class="fa-solid fa-circle-user"></i>
-
                 Personal Information
-
             </h2>
-
 
             <div class="info-grid">
 
-
                 <!-- FULL NAME -->
-
                 <div class="info-box">
-
                     <div class="info-label">
-
                         <i class="fa-solid fa-user"></i>
-
                         Full Name
-
                     </div>
-
 
                     <div class="info-value"
                          th:text="${user.name}">
-
                         User Name
-
                     </div>
-
                 </div>
 
-
-
                 <!-- EMAIL -->
-
                 <div class="info-box">
-
                     <div class="info-label">
-
                         <i class="fa-solid fa-envelope"></i>
-
                         Email Address
-
                     </div>
-
 
                     <div class="info-value"
                          th:text="${user.email}">
-
                         user@example.com
-
                     </div>
-
                 </div>
 
-
-
                 <!-- ACCOUNT TYPE -->
-
                 <div class="info-box">
-
                     <div class="info-label">
-
                         <i class="fa-solid fa-shield-halved"></i>
-
                         Account Type
-
                     </div>
-
 
                     <div class="info-value"
                          th:text="${user.role}">
-
                         USER
-
                     </div>
-
                 </div>
 
-
-
                 <!-- USER ID -->
-
                 <div class="info-box">
-
                     <div class="info-label">
-
                         <i class="fa-solid fa-hashtag"></i>
-
                         User ID
-
                     </div>
-
 
                     <div class="info-value"
                          th:text="${user.id}">
-
                         1
-
                     </div>
-
                 </div>
-
 
             </div>
 
-
-
-            <!-- =========================
-                 QUICK ACTIONS
-            ========================= -->
-
+            <!-- QUICK ACTIONS -->
             <div class="actions">
 
-
                 <h2 class="section-title">
-
                     <i class="fa-solid fa-compass"></i>
-
                     Quick Actions
-
                 </h2>
-
 
                 <div class="action-buttons">
 
-
                     <!-- MY ORDERS -->
-
-                    <a href="/orders"
-                       class="btn btn-primary">
-
+                    <a th:href="@{/orders}" class="btn btn-primary">
                         <i class="fa-solid fa-box"></i>
-
                         My Orders
-
                     </a>
-
-
 
                     <!-- BROWSE FOOD -->
-
-                    <a href="/foods"
-                       class="btn btn-secondary">
-
+                    <a th:href="@{/foods}" class="btn btn-secondary">
                         <i class="fa-solid fa-utensils"></i>
-
                         Browse Food
-
                     </a>
-
-
 
                     <!-- VIEW CART -->
-
-                    <a href="/cart"
-                       class="btn btn-secondary">
-
+                    <a th:href="@{/cart}" class="btn btn-secondary">
                         <i class="fa-solid fa-cart-shopping"></i>
-
                         View Cart
-
                     </a>
 
-
                 </div>
-
             </div>
 
-
         </div>
-
     </div>
 
 </main>
 
-
-
-<!-- =========================
-     FOOTER
-========================= -->
-
+<!-- FOOTER -->
 <footer class="footer">
-
     <p>
-
-        © 2026
-        <strong>FoodHub</strong>.
-        All rights reserved.
-
+        © 2026 <strong>FoodHub</strong>. All rights reserved.
     </p>
-
 </footer>
 
-
 </body>
-
 </html>
