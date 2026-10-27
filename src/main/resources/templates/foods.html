@@ -247,12 +247,19 @@
 
             <div class="food-image-container">
 
+                <!--
+                    Use the image saved by the admin.
+                    The Food entity property is 'image', not 'imageUrl'.
+                    Automatic images are used only when no admin image exists.
+                -->
+
                 <img class="food-image"
                      th:attr="data-food-name=${food.name},
-                              data-food-category=${food.category}"
+                              data-food-category=${food.category},
+                              data-uploaded-image=${food.image != null and !#strings.isEmpty(food.image) ? 'true' : 'false'}"
+                     th:src="${food.image != null and !#strings.isEmpty(food.image) ? food.image : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&amp;fit=crop&amp;w=700&amp;q=85'}"
                      th:alt="${food.name}"
-                     loading="lazy"
-                     src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&amp;fit=crop&amp;w=700&amp;q=85">
+                     loading="lazy">
 
                 <span class="food-category"
                       th:text="${food.category != null ? food.category : 'Special'}">
@@ -260,8 +267,8 @@
                 </span>
 
                 <span class="stock-badge"
-                      th:classappend="${food.stock != null and food.stock > 0 ? ' in-stock' : ' out-stock'}"
-                      th:text="${food.stock != null and food.stock > 0 ? 'Available' : 'Sold Out'}">
+                      th:classappend="${food.stock > 0 ? ' in-stock' : ' out-stock'}"
+                      th:text="${food.stock > 0 ? 'Available' : 'Sold Out'}">
                     Available
                 </span>
 
@@ -301,11 +308,11 @@
 
                         <button type="submit"
                                 class="add-cart-button"
-                                th:disabled="${food.stock == null or food.stock <= 0}">
+                                th:disabled="${food.stock <= 0}">
 
                             <i class="fa-solid fa-cart-plus"></i>
 
-                            <span th:text="${food.stock != null and food.stock > 0 ? 'Add to Cart' : 'Sold Out'}">
+                            <span th:text="${food.stock > 0 ? 'Add to Cart' : 'Sold Out'}">
                                 Add to Cart
                             </span>
 
@@ -440,6 +447,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // FOOD IMAGE COLLECTION
+    // Used only when the admin has not supplied an image.
 
     const foodImageMap = [
         {
@@ -513,12 +521,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // SET AN IMAGE FOR EVERY FOOD CARD
+    // Admin-provided images are never replaced by the image map.
 
     foodCards.forEach(function (card) {
 
         const image = card.querySelector(".food-image");
 
         if (!image) return;
+
+        const hasUploadedImage =
+            image.dataset.uploadedImage === "true";
+
+        if (hasUploadedImage) {
+
+            // If the admin URL fails, use the default fallback.
+            image.onerror = function () {
+                image.onerror = null;
+                image.src = defaultFoodImage;
+            };
+
+            return;
+        }
 
         const name = (image.dataset.foodName || "").toLowerCase();
         const category = (image.dataset.foodCategory || "").toLowerCase();

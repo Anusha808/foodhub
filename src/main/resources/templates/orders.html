@@ -33,7 +33,6 @@
             text-decoration: none;
         }
 
-        /* NAVBAR */
         .navbar {
             min-height: 72px;
             background: #fff;
@@ -115,7 +114,6 @@
             color: #fff;
         }
 
-        /* PAGE HEADER */
         .page-header {
             background: linear-gradient(135deg, #fff3e8, #fffaf5);
             padding: 55px 7% 45px;
@@ -143,7 +141,6 @@
             line-height: 1.6;
         }
 
-        /* ORDERS SECTION */
         .orders-section {
             padding: 50px 7% 80px;
         }
@@ -159,6 +156,7 @@
             justify-content: space-between;
             gap: 15px;
             margin-bottom: 25px;
+            flex-wrap: wrap;
         }
 
         .section-title {
@@ -175,7 +173,6 @@
             font-weight: 700;
         }
 
-        /* GENERAL FEEDBACK LINK */
         .general-feedback-link {
             display: inline-flex;
             align-items: center;
@@ -196,7 +193,6 @@
             color: #fff;
         }
 
-        /* EMPTY ORDERS */
         .empty-orders {
             background: #fff;
             border: 1px solid #eee;
@@ -252,7 +248,6 @@
             transform: translateY(-2px);
         }
 
-        /* ORDERS LIST */
         .orders-list {
             display: flex;
             flex-direction: column;
@@ -271,6 +266,15 @@
         .order-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .cancelled-card {
+            opacity: 0.85;
+        }
+
+        .cancelled-card .order-icon {
+            background: #ffe9e9;
+            color: #dc3545;
         }
 
         .order-top {
@@ -312,7 +316,6 @@
             font-size: 15px;
         }
 
-        /* STATUS BADGES */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -343,12 +346,21 @@
             color: #dc3545;
         }
 
+        .status-review {
+            background: #fff0d9;
+            color: #925900;
+        }
+
+        .status-failed {
+            background: #ffe9e9;
+            color: #dc3545;
+        }
+
         .status-default {
             background: #eee;
             color: #555;
         }
 
-        /* ORDER INFORMATION */
         .order-info {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -385,7 +397,6 @@
             overflow-wrap: anywhere;
         }
 
-        /* DELIVERY ADDRESS */
         .address-box {
             display: flex;
             gap: 12px;
@@ -422,7 +433,6 @@
             overflow-wrap: anywhere;
         }
 
-        /* ORDER BOTTOM */
         .order-bottom {
             display: flex;
             align-items: center;
@@ -452,13 +462,43 @@
             display: flex;
             align-items: center;
             gap: 7px;
+            flex-wrap: wrap;
         }
 
-        .payment-method i {
+        .payment-method > i {
             color: #ff6b00;
         }
 
-        /* ORDER ACTIONS */
+        .payment-status {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 800;
+            background: #eee;
+            color: #555;
+        }
+
+        .payment-status-paid {
+            background: #eaf8ef;
+            color: #198754;
+        }
+
+        .payment-status-pending {
+            background: #fff5d9;
+            color: #a66a00;
+        }
+
+        .payment-status-failed {
+            background: #ffe9e9;
+            color: #dc3545;
+        }
+
+        .payment-status-review {
+            background: #fff0d9;
+            color: #925900;
+        }
+
         .order-actions {
             display: flex;
             align-items: center;
@@ -486,7 +526,6 @@
             transform: translateY(-2px);
         }
 
-        /* ORDER-SPECIFIC FEEDBACK */
         .feedback-btn {
             display: inline-flex;
             align-items: center;
@@ -535,16 +574,27 @@
             color: #fff;
         }
 
-        .cancelled-card {
-            opacity: 0.85;
+        .order-note {
+            width: 100%;
+            padding: 12px 14px;
+            margin-top: 16px;
+            border-radius: 9px;
+            font-size: 12px;
+            line-height: 1.6;
         }
 
-        .cancelled-card .order-icon {
-            background: #ffe9e9;
-            color: #dc3545;
+        .review-note {
+            background: #fff5e6;
+            border: 1px solid #f3d4a7;
+            color: #81520a;
         }
 
-        /* FOOTER */
+        .failed-note {
+            background: #fff0f0;
+            border: 1px solid #f3c5c5;
+            color: #a51d2d;
+        }
+
         .footer {
             background: #1f1f1f;
             color: #aaa;
@@ -557,7 +607,6 @@
             color: #ff6b00;
         }
 
-        /* RESPONSIVE */
         @media (max-width: 1000px) {
             .navbar {
                 padding: 12px 4%;
@@ -666,15 +715,10 @@
         <a th:href="@{/foods}">Food Menu</a>
         <a th:href="@{/cart}">Cart</a>
         <a th:href="@{/orders}" class="active">My Orders</a>
-
-        <!-- GENERAL FOODHUB FEEDBACK -->
-        <a th:href="@{/feedback/general}">
-            FoodHub Feedback
-        </a>
+        <a th:href="@{/feedback/general}">FoodHub Feedback</a>
     </nav>
 
     <div class="nav-right">
-
         <a th:href="@{/cart}" class="cart-link" aria-label="Shopping cart">
             <i class="fa-solid fa-cart-shopping"></i>
         </a>
@@ -682,8 +726,8 @@
         <a th:href="@{/profile}" class="profile-link" aria-label="My profile">
             <i class="fa-solid fa-user"></i>
         </a>
-
     </div>
+
 </header>
 
 <!-- PAGE HEADER -->
@@ -707,13 +751,19 @@
                 0 Orders
             </span>
 
-            <!-- GENERAL FEEDBACK LINK -->
             <a th:href="@{/feedback/general}"
                class="general-feedback-link">
                 <i class="fa-regular fa-comments"></i>
                 Rate FoodHub
             </a>
 
+        </div>
+
+        <!-- FLASH MESSAGE -->
+        <div th:if="${paymentError != null}"
+             class="order-note review-note"
+             th:text="${paymentError}">
+            Please contact support about your payment.
         </div>
 
         <!-- EMPTY ORDERS -->
@@ -763,7 +813,6 @@
 
                     </div>
 
-                    <!-- ORDER STATUS -->
                     <span class="status-badge"
                           th:classappend="${order.status == 'PLACED'
                             ? ' status-placed'
@@ -771,10 +820,21 @@
                             ? ' status-pending'
                             : (order.status == 'CANCELLED'
                             ? ' status-cancelled'
-                            : ' status-default'))}">
+                            : (order.status == 'PAYMENT_REVIEW'
+                            ? ' status-review'
+                            : (order.status == 'PAYMENT_FAILED'
+                            ? ' status-failed'
+                            : ' status-default'))))}">
 
                         <i class="fa-solid fa-circle"></i>
-                        <span th:text="${order.status}">PLACED</span>
+
+                        <span th:text="${order.status == 'PAYMENT_REVIEW'
+                            ? 'PAYMENT UNDER REVIEW'
+                            : (order.status == 'PAYMENT_FAILED'
+                            ? 'PAYMENT FAILED'
+                            : order.status)}">
+                            PLACED
+                        </span>
 
                     </span>
 
@@ -838,7 +898,9 @@
 
                     <div class="address-content">
 
-                        <span class="address-label">Delivery Address</span>
+                        <span class="address-label">
+                            Delivery Address
+                        </span>
 
                         <div class="address-text"
                              th:text="${order.address}">
@@ -849,7 +911,7 @@
 
                 </div>
 
-                <!-- ORDER TOTAL AND ACTIONS -->
+                <!-- ORDER TOTAL AND PAYMENT -->
                 <div class="order-bottom">
 
                     <div>
@@ -862,20 +924,54 @@
                         </div>
                     </div>
 
+                    <!-- PAYMENT INFORMATION -->
                     <div class="payment-method">
+
                         <i class="fa-solid fa-credit-card"></i>
-                        <span th:text="${order.paymentMethod}">COD</span>
+
+                        <span th:text="${order.paymentMethod == 'ONLINE'
+                            ? 'Online Payment'
+                            : 'Cash on Delivery'}">
+                            Cash on Delivery
+                        </span>
+
+                        <!-- ONLINE PAYMENT STATUS -->
+                        <span th:if="${order.paymentMethod == 'ONLINE'}"
+                              class="payment-status"
+                              th:classappend="${order.paymentStatus == 'PAID'
+                                ? ' payment-status-paid'
+                                : (order.paymentStatus == 'PENDING'
+                                ? ' payment-status-pending'
+                                : (order.paymentStatus == 'FAILED'
+                                ? ' payment-status-failed'
+                                : (order.status == 'PAYMENT_REVIEW'
+                                ? ' payment-status-review' : '')))}"
+                              th:text="${order.status == 'PAYMENT_REVIEW'
+                                ? 'REVIEW REQUIRED'
+                                : (order.paymentStatus != null
+                                ? order.paymentStatus : 'UNKNOWN')}">
+                            PAID
+                        </span>
+
+                        <!-- COD PAYMENT STATUS -->
+                        <span th:if="${order.paymentMethod == 'COD'}"
+                              class="payment-status payment-status-pending">
+                            PAY ON DELIVERY
+                        </span>
+
                     </div>
 
+                    <!-- ORDER ACTIONS -->
                     <div class="order-actions">
 
                         <!-- ORDER AGAIN -->
-                        <a th:href="@{/foods}" class="order-again-btn">
+                        <a th:href="@{/foods}"
+                           class="order-again-btn">
                             <i class="fa-solid fa-rotate-right"></i>
                             Order Again
                         </a>
 
-                        <!-- FEEDBACK FOR THIS SPECIFIC ORDER -->
+                        <!-- ORDER FEEDBACK -->
                         <a th:href="@{/feedback/order/{orderId}(orderId=${order.id})}"
                            class="feedback-btn">
                             <i class="fa-regular fa-comments"></i>
@@ -883,8 +979,10 @@
                         </a>
 
                         <!-- CANCEL ORDER -->
-                        <form th:if="${order.status == 'PLACED'
-                                      or order.status == 'PENDING'}"
+                        <form th:if="${(order.status == 'PLACED'
+                                      or order.status == 'PENDING')
+                                      and !(order.paymentMethod == 'ONLINE'
+                                      and order.paymentStatus == 'PAID')}"
                               th:action="@{/orders/cancel/{id}(id=${order.id})}"
                               method="post"
                               class="cancel-form"
@@ -898,10 +996,36 @@
                         </form>
 
                     </div>
+
+                </div>
+
+                <!-- PAYMENT REVIEW NOTICE -->
+                <div th:if="${order.status == 'PAYMENT_REVIEW'}"
+                     class="order-note review-note">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    Your payment has been recorded, but this order needs
+                    further review. Please contact FoodHub support before
+                    placing another order for the same items.
+                </div>
+
+                <!-- PAYMENT FAILED NOTICE -->
+                <div th:if="${order.status == 'PAYMENT_FAILED'
+                              or order.paymentStatus == 'FAILED'}"
+                     class="order-note failed-note">
+
+                    <i class="fa-solid fa-circle-exclamation"></i>
+
+                    This order's payment was not confirmed. If money was
+                    deducted from your account, please contact support
+                    and provide your order ID.
                 </div>
 
             </div>
+
         </div>
+
     </div>
 </main>
 

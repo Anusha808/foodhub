@@ -1,3 +1,4 @@
+
 package com.foodhub.controller;
 
 import com.foodhub.model.Order;
@@ -30,52 +31,35 @@ public class OrdersController {
         this.userRepository = userRepository;
     }
 
-
-    // =========================================================
     // MY ORDERS
-    // =========================================================
 
     @GetMapping("/orders")
     public String orders(
             HttpSession session,
             Model model) {
 
-        Long userId =
-                (Long) session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute("userId");
 
-        // User not logged in
         if (userId == null) {
             return "redirect:/login";
         }
 
-
-        // Find logged-in user
-        User user =
-                userRepository.findById(userId)
-                        .orElse(null);
+        User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
             return "redirect:/login";
         }
 
-
-        // Get user's orders
         List<Order> orders =
                 orderRepository.findByUserOrderByOrderDateDesc(user);
 
-
         model.addAttribute("user", user);
-
         model.addAttribute("orders", orders);
-
 
         return "orders";
     }
 
-
-    // =========================================================
     // CANCEL ORDER
-    // =========================================================
 
     @PostMapping("/orders/cancel/{id}")
     @Transactional
@@ -83,89 +67,50 @@ public class OrdersController {
             @PathVariable("id") Long orderId,
             HttpSession session) {
 
-
-        // -----------------------------------------------------
-        // Check login
-        // -----------------------------------------------------
-
-        Long userId =
-                (Long) session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute("userId");
 
         if (userId == null) {
             return "redirect:/login";
         }
 
-
-        // -----------------------------------------------------
-        // Find user
-        // -----------------------------------------------------
-
-        User user =
-                userRepository.findById(userId)
-                        .orElse(null);
+        User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
             return "redirect:/login";
         }
 
-
-        // -----------------------------------------------------
-        // Find order
-        // -----------------------------------------------------
-
-        Order order =
-                orderRepository.findById(orderId)
-                        .orElse(null);
+        Order order = orderRepository.findById(orderId).orElse(null);
 
         if (order == null) {
             return "redirect:/orders";
         }
 
-
-        // -----------------------------------------------------
-        // Security check
-        // -----------------------------------------------------
-        // Make sure the order belongs to the
-        // currently logged-in user.
-        // -----------------------------------------------------
-
-        if (order.getUser() == null ||
-                !order.getUser().getId().equals(userId)) {
+        // Verify that the order belongs to this user.
+        if (order.getUser() == null
+                || order.getUser().getId() == null
+                || !order.getUser().getId().equals(userId)) {
 
             return "redirect:/orders";
         }
 
-
-        // -----------------------------------------------------
-        // Only PLACED and PENDING orders can be cancelled
-        // -----------------------------------------------------
-
-        if (!"PLACED".equalsIgnoreCase(order.getStatus()) &&
-                !"PENDING".equalsIgnoreCase(order.getStatus())) {
+        // Do not cancel an already paid online order
+        // through this simple cancellation endpoint.
+        if ("ONLINE".equalsIgnoreCase(order.getPaymentMethod())
+                && "PAID".equalsIgnoreCase(order.getPaymentStatus())) {
 
             return "redirect:/orders";
         }
 
+        // Only eligible unpaid or COD orders can be cancelled.
+        if (!"PLACED".equalsIgnoreCase(order.getStatus())
+                && !"PENDING".equalsIgnoreCase(order.getStatus())) {
 
-        // -----------------------------------------------------
-        // Change order status
-        // -----------------------------------------------------
+            return "redirect:/orders";
+        }
 
         order.setStatus("CANCELLED");
-
-
-        // -----------------------------------------------------
-        // Save updated order
-        // -----------------------------------------------------
-
         orderRepository.save(order);
-
-
-        // -----------------------------------------------------
-        // Return to My Orders
-        // -----------------------------------------------------
 
         return "redirect:/orders";
     }
-
 }

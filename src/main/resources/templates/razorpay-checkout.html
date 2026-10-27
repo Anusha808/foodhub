@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -137,6 +138,11 @@
             background: #e85d00;
         }
 
+        .pay-button:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
         .cancel-link {
             display: inline-block;
             margin-top: 18px;
@@ -158,6 +164,13 @@
         .secure-note i {
             color: #16a34a;
             margin-right: 5px;
+        }
+
+        .error-message {
+            margin-bottom: 18px;
+            color: #b91c1c;
+            font-size: 13px;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -188,8 +201,7 @@
         <div class="amount-label">Amount to Pay</div>
 
         <div class="amount">
-            ₹<span th:text="${#numbers.formatDecimal(
-                    amountPaise / 100.0, 1, 2)}">0.00</span>
+            ₹<span th:text="${#numbers.formatDecimal(amount / 100.0, 1, 2)}">0.00</span>
         </div>
     </div>
 
@@ -199,18 +211,20 @@
             <span th:text="${customerName}">Customer</span>
         </div>
 
-        <div>
-            <i class="fa-regular fa-envelope"></i>
-            <span th:text="${customerEmail}">Email</span>
+        <div th:if="${phone != null and !phone.isEmpty()}">
+            <i class="fa-solid fa-phone"></i>
+            <span th:text="${phone}">Phone</span>
         </div>
     </div>
+
+    <p id="paymentError" class="error-message" role="alert" hidden></p>
 
     <button type="button" id="payButton" class="pay-button">
         <i class="fa-solid fa-lock"></i>
         Pay Securely with Razorpay
     </button>
 
-    <a href="/checkout/payment-cancelled" class="cancel-link">
+    <a th:href="@{/checkout}" class="cancel-link">
         Cancel and return to checkout
     </a>
 
@@ -224,21 +238,60 @@
 <script th:inline="javascript">
     const razorpayKeyId = /*[[${razorpayKeyId}]]*/ "";
     const razorpayOrderId = /*[[${razorpayOrderId}]]*/ "";
-    const amountPaise = /*[[${amountPaise}]]*/ 0;
+    const amountPaise = /*[[${amount}]]*/ 0;
+    const localOrderId = /*[[${localOrderId}]]*/ 0;
     const customerName = /*[[${customerName}]]*/ "";
-    const customerEmail = /*[[${customerEmail}]]*/ "";
-    const customerPhone = /*[[${customerPhone}]]*/ "";
+    const customerPhone = /*[[${phone}]]*/ "";
+
+    const csrfParameterName =
+        /*[[${_csrf != null ? _csrf.parameterName : ''}]]*/ "";
+
+    const csrfToken =
+        /*[[${_csrf != null ? _csrf.token : ''}]]*/ "";
 
     const payButton = document.getElementById("payButton");
+    const paymentError = document.getElementById("paymentError");
+
     let paymentWindowOpened = false;
+    let verificationSubmitted = false;
+
+    function showError(message) {
+        paymentError.style.color = "#b91c1c";
+        paymentError.hidden = false;
+        paymentError.textContent = message;
+    }
 
     payButton.addEventListener("click", function () {
-        if (paymentWindowOpened) {
+
+        if (paymentWindowOpened || verificationSubmitted) {
             return;
         }
 
+        paymentError.hidden = true;
+
         if (typeof Razorpay === "undefined") {
-            alert("Razorpay could not load. Check your internet connection.");
+            showError(
+                "Razorpay could not load. Check your internet connection and try again."
+            );
+            return;
+        }
+
+        if (!razorpayKeyId ||
+            !razorpayOrderId ||
+            !amountPaise ||
+            !localOrderId) {
+
+            showError(
+                "Payment details are missing. Return to checkout and try again."
+            );
+
+            console.error("Missing Razorpay checkout details:", {
+                hasKey: Boolean(razorpayKeyId),
+                hasRazorpayOrderId: Boolean(razorpayOrderId),
+                amountPaise: amountPaise,
+                localOrderId: localOrderId
+            });
+
             return;
         }
 
@@ -252,7 +305,6 @@
 
             prefill: {
                 name: customerName,
-                email: customerEmail,
                 contact: customerPhone
             },
 
@@ -261,13 +313,46 @@
             },
 
             handler: function (response) {
-                // Submit Razorpay's returned fields to the server.
-                // The server verifies the signature before saving the order.
+                console.log("Razorpay success callback received.");
+                console.log("Local order ID:", localOrderId);
+                console.log("Payment ID received:",
+                    Boolean(response.razorpay_payment_id));
+                console.log("Razorpay order ID received:",
+                    Boolean(response.razorpay_order_id));
+                console.log("Signature received:",
+                    Boolean(response.razorpay_signature));
+
+                if (!response.razorpay_payment_id ||
+                    !response.razorpay_order_id ||
+                    !response.razorpay_signature) {
+
+                    verificationSubmitted = false;
+                    paymentWindowOpened = false;
+                    payButton.disabled = false;
+
+                    showError(
+                        "Payment verification details are missing. Please contact support."
+                    );
+                    return;
+                }
+
+                verificationSubmitted = true;
+
+                payButton.disabled = true;
+                payButton.textContent = "Verifying payment...";
+
+                paymentError.style.color = "#166534";
+                paymentError.hidden = false;
+                paymentError.textContent =
+                    "Payment completed. Verifying your order...";
+
                 const form = document.createElement("form");
                 form.method = "POST";
-                form.action = "/checkout/payment-success";
+                form.action =
+                    /*[[@{/checkout/verify-payment}]]*/ "/checkout/verify-payment";
 
                 const fields = {
+                    localOrderId: localOrderId,
                     razorpay_payment_id: response.razorpay_payment_id,
                     razorpay_order_id: response.razorpay_order_id,
                     razorpay_signature: response.razorpay_signature
@@ -281,41 +366,76 @@
                     form.appendChild(input);
                 });
 
+                if (csrfParameterName && csrfToken) {
+                    const csrfInput = document.createElement("input");
+                    csrfInput.type = "hidden";
+                    csrfInput.name = csrfParameterName;
+                    csrfInput.value = csrfToken;
+                    form.appendChild(csrfInput);
+                }
+
                 document.body.appendChild(form);
+
+                console.log(
+                    "Submitting POST request to /checkout/verify-payment"
+                );
+
                 form.submit();
             },
 
             modal: {
                 ondismiss: function () {
-                    window.location.href = "/checkout/payment-cancelled";
+                    if (!verificationSubmitted) {
+                        paymentWindowOpened = false;
+                        payButton.disabled = false;
+
+                        payButton.innerHTML =
+                            '<i class="fa-solid fa-lock"></i> Pay Securely with Razorpay';
+
+                        showError(
+                            "Payment window closed. Check your order status before trying again."
+                        );
+                    }
                 }
             }
         };
 
-        const razorpay = new Razorpay(options);
-
-        razorpay.on("payment.failed", function (response) {
-            const message =
-                response.error && response.error.description
-                    ? response.error.description
-                    : "Payment could not be completed.";
-
-            alert(message);
-        });
-
-        paymentWindowOpened = true;
-        payButton.disabled = true;
-        payButton.textContent = "Opening Razorpay...";
-
         try {
+            const razorpay = new Razorpay(options);
+
+            razorpay.on("payment.failed", function (response) {
+                console.error("Razorpay payment failed.");
+
+                paymentWindowOpened = false;
+                payButton.disabled = false;
+
+                payButton.innerHTML =
+                    '<i class="fa-solid fa-lock"></i> Pay Securely with Razorpay';
+
+                const description =
+                    response.error && response.error.description;
+
+                showError(
+                    description || "Payment failed. Please try again."
+                );
+            });
+
+            paymentWindowOpened = true;
+            payButton.disabled = true;
+            payButton.textContent = "Opening Razorpay...";
+
             razorpay.open();
+
         } catch (error) {
+            console.error("Unable to open Razorpay:", error);
+
             paymentWindowOpened = false;
             payButton.disabled = false;
+
             payButton.innerHTML =
                 '<i class="fa-solid fa-lock"></i> Pay Securely with Razorpay';
 
-            alert("Unable to open Razorpay. Please try again.");
+            showError("Unable to open Razorpay. Please try again.");
         }
     });
 </script>
